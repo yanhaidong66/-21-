@@ -4,6 +4,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 
@@ -21,7 +22,7 @@ public class MysqlFactory {
     }
 
     public static SqlSession getSession() {
-        return sqlSessionFactory.openSession();
+        return sqlSessionFactory.openSession(false);
     }
 
     public static <T> T getMapper(Class<T> type) {

@@ -1,16 +1,17 @@
 package top.haidong556.ac.repository;
 
-import top.haidong556.ac.entity.bill.BIllItem;
+import top.haidong556.ac.entity.bill.BillItem;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public class BillRepository {
-    public List<BIllItem> getBillItemByTime(createTime,endTime){
+    public List<BillItem> getBillItemByTime(LocalDateTime createTime,LocalDateTime endTime){
 
     }
-    public void createBillItem(BIllItem bIllItem){
+    public void createBillItem(BillItem bIllItem){
 
     }
     public void deleteBillItem(int billItemId){

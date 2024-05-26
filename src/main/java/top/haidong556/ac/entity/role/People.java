@@ -10,4 +10,7 @@ public abstract class People {
         this.username=username;
         this.password=password;
     }
+    public enum RoleType {
+        USER(),ADMIN(),MANAGER(),WAITER();
+    }
 }
