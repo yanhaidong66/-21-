@@ -1,5 +1,6 @@
 package top.haidong556.ac.controller;
 
+import top.haidong556.ac.entity.ac.Ac;
 import top.haidong556.ac.service.AcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,16 +16,16 @@ public class AcController {
     @Autowired
     private void setAcService(){}
     @PostMapping("/addAc")
-    public void addAc(int acId){
+    public void addAc(Ac acId){
 
     }
     @PatchMapping("/changeAcTemp")
-    public void changeAcTemp(int acId){
+    public void changeAcTemp(int acId,int newTemp){
 
     }
 
     @PatchMapping("/changeAcWindSpeed")
-    public void changeAcWindSpeed(int acId){
+    public void changeAcWindSpeed(int acId,int newWindSpeed){
 
     }
     @GetMapping()
@@ -40,11 +41,9 @@ public class AcController {
 
     }
     @GetMapping("/getAcState")
-    public void getAcState(int acId){
+    public Ac getAcState(int acId){
 
     }
-    public void getAcOperationDetail(int acId){
 
-    }
 
 }

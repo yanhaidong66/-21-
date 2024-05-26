@@ -1,6 +1,7 @@
 package top.haidong556.ac.mapper;
 
 import org.apache.ibatis.annotations.*;
+import top.haidong556.ac.entity.role.People;
 import top.haidong556.ac.entity.role.People.RoleType;
 import top.haidong556.ac.entity.role.User;
 import top.haidong556.ac.mapper.handler.RoleTypeHandler;
@@ -21,7 +22,7 @@ public interface UserMapper {
     @Results({
             @Result(property = "roleType", column = "roleType", javaType = RoleType.class, typeHandler = RoleTypeHandler.class)
     })
-    User getUser(int userId);
+    People getUser(int userId);
 
     @Select("SELECT user_id AS userId, user_ac_id AS userAcId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user WHERE user_username = #{username}")
     @Results({
@@ -33,6 +34,6 @@ public interface UserMapper {
     @Results({
             @Result(property = "roleType", column = "roleType", javaType = RoleType.class, typeHandler = RoleTypeHandler.class)
     })
-    List<User> getAllUser();
+    List<People> getAllUser();
 }
 
