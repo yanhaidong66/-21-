@@ -1,13 +1,15 @@
 drop database db_ac;
 create database db_ac;
 use db_ac;
-create table t_ac(
-                     ac_id int primary key auto_increment,
-                     ac_room varchar(30) not null,
-                     ac_state tinyint not null default 0 /* 0未开启，1已开启*/,
-                     ac_user_id int not null default 0,
-                     ac_cost int not null default 10,
-                     index (ac_room)
+CREATE TABLE t_ac(
+                     ac_id INT PRIMARY KEY AUTO_INCREMENT,
+                     ac_room VARCHAR(30) NOT NULL,
+                     ac_state TINYINT NOT NULL DEFAULT 0, /* 0未开启，1已开启*/
+                     ac_user_id INT NOT NULL DEFAULT 0,
+                     ac_temp TINYINT NOT NULL DEFAULT 20,
+                     ac_wind_speed MEDIUMINT NOT NULL DEFAULT 20,
+                     ac_cost_per_hour INT NOT NULL DEFAULT 10,
+                     INDEX (ac_room)
 );
 create table t_user(
                        user_id int primary key auto_increment,

@@ -29,6 +29,7 @@ public class BillTable {
         private LocalDateTime createTime;
 
         public Builder() {
+            createTime = LocalDateTime.now();
         }
 
         // 设置账单项目的方法，返回 Builder 实例以便链式调用
@@ -38,10 +39,6 @@ public class BillTable {
         }
 
         // 设置创建时间的方法，返回 Builder 实例以便链式调用
-        public Builder withCreateTime(LocalDateTime createTime) {
-            this.createTime = createTime;
-            return this;
-        }
 
         // 构建最终的 BillTable 实例的方法
         public BillTable build() {

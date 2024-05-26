@@ -43,11 +43,18 @@ public class AcService {
 
     public OperationTable getAcDetailTableByUserId(int userId) {
         List<OperationItem> acOperationTableByAcId = acOperationRepository.getAcOperationTableByUserId(userId);
-
+        OperationTable table = new OperationTable.Builder()
+                .setOperationItems(acOperationTableByAcId)
+                .build();
+        return table;
     }
+
     public OperationTable getAcDetailTableByAcId(int acId) {
         List<OperationItem> acOperationTableByAcId = acOperationRepository.getAcOperationTableByAcId(acId);
-
+        OperationTable table = new OperationTable.Builder()
+                .setOperationItems(acOperationTableByAcId)
+                .build();
+        return table;
     }
 
     public Ac getAcState(int acId) {

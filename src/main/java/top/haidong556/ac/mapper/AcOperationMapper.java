@@ -11,15 +11,19 @@ import java.util.List;
 @Mapper
 public interface AcOperationMapper {
 
-    @Select("SELECT operation_id AS operationId, user_id AS userId, operation_type AS type, create_time AS createTime, ac_id AS acId FROM t_ac_operation WHERE user_id = #{userId}")
-    @Results({
-            @Result(property = "type", column = "operation_type", javaType = OperationItem.OperationType.class, typeHandler = OperationTypeHandler.class)
-    })
-    List<OperationItem> getAcOperationTableByUserId(int userId);
 
-    @Select("SELECT operation_id AS operationId, user_id AS userId, operation_type AS type, create_time AS createTime, ac_id AS acId FROM t_ac_operation WHERE ac_id = #{acId}")
+    @Select("SELECT op_id AS operationId, op_user_id AS userId, op_type AS type, op_create_time AS createTime, op_ac_id AS acId FROM t_ac_operation WHERE op_user_id = #{userId}")
     @Results({
-            @Result(property = "type", column = "operation_type", javaType = OperationItem.OperationType.class, typeHandler = OperationTypeHandler.class)
+            @Result(property = "type", column = "op_type", javaType = OperationItem.OperationType.class, typeHandler = OperationTypeHandler.class)
     })
-    List<OperationItem> getAcOperationTableByAcId(int acId);
+    List<OperationItem> getAcOperationItemsByUserId(int userId);
+
+    @Select("SELECT op_id AS operationId, op_user_id AS userId, op_type AS type, op_create_time AS createTime, op_ac_id AS acId FROM t_ac_operation WHERE op_ac_id = #{acId}")
+    @Results({
+            @Result(property = "type", column = "op_type", javaType = OperationItem.OperationType.class, typeHandler = OperationTypeHandler.class)
+    })
+    List<OperationItem> getAcOperationItemsByAcId(int acId);
+
+    @Insert("INSERT INTO t_ac_operation(op_user_id, op_type, op_create_time, op_ac_id) VALUES (#{userId}, #{type}, #{createTime}, #{acId})")
+    void createOperationItem(OperationItem operationItem);
 }

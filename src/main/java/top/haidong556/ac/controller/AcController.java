@@ -10,39 +10,39 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping
+@RequestMapping("/ac")
 public class AcController {
     private AcService acService;
     @Autowired
     private void setAcService(){}
-    @PostMapping("/addAc")
-    public void addAc(Ac acId){
-
+    @PostMapping()
+    public void addAc(Ac newAc){
+        acService.addAc(newAc);
     }
-    @PatchMapping("/changeAcTemp")
+    @PatchMapping("/temp")
     public void changeAcTemp(int acId,int newTemp){
 
     }
 
-    @PatchMapping("/changeAcWindSpeed")
+    @PatchMapping("/windSpeed")
     public void changeAcWindSpeed(int acId,int newWindSpeed){
 
     }
-    @GetMapping()
+    @GetMapping("/close")
     public void closeAc(int acId){
-
+        acService.closeAc(acId);
     }
-    @GetMapping()
+    @GetMapping("/open")
     public void openAc(int acId){
+        acService.openAc(acId);
+    }
+    @GetMapping("/detail")
+    public void getDetail(int acId){
 
     }
-    @GetMapping()
-    public void getCost(int acId){
-
-    }
-    @GetMapping("/getAcState")
+    @GetMapping("/state")
     public Ac getAcState(int acId){
-
+        return acService.getAcState(acId);
     }
 
 

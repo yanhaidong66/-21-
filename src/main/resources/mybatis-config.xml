@@ -3,6 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+    <typeHandlers>
+        <package name="top.haidong556.ac.mapper.handler"/>
+    </typeHandlers>
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
@@ -12,7 +15,12 @@
                 <property name="username" value="root"/>
                 <property name="password" value="000227"/>
             </dataSource>
+
         </environment>
+
     </environments>
+    <mappers>
+        <package name="top.haidong556.ac.mapper"></package>
+    </mappers>
 
 </configuration>

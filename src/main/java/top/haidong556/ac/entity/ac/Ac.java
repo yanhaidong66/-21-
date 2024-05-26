@@ -9,8 +9,9 @@ public class Ac {
     private int windSpeed;
     private int temp;
     private String room;
-    private int cost_per_hour;
+    private int costPerHour;
+
     public enum AcState {
-        OPEN,CLOSE;
+         CLOSE,OPEN;
     }
 }

@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.sql.CallableStatement;
 
 public class OperationTypeHandler extends BaseTypeHandler<OperationItem.OperationType> {
-
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, OperationItem.OperationType parameter, JdbcType jdbcType) throws SQLException {
         ps.setInt(i, parameter.ordinal());

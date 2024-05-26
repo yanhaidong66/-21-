@@ -11,29 +11,28 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
 
-    @Insert("INSERT INTO t_user (user_ac_id, user_username, user_password, user_role) VALUES (#{userAcId}, #{username}, #{password}, #{roleType})")
+    @Insert("INSERT INTO t_user (user_ac_id, user_username, user_password, user_role) VALUES (#{acId}, #{username}, #{password}, #{roleType})")
     @Options(useGeneratedKeys = true, keyProperty = "userId")
     void createUser(User user);
 
     @Delete("DELETE FROM t_user WHERE user_id = #{userId}")
     void deleteUser(int userId);
 
-    @Select("SELECT user_id AS userId, user_ac_id AS userAcId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user WHERE user_id = #{userId}")
+    @Select("SELECT user_id AS userId, user_ac_id AS acId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user WHERE user_id = #{userId}")
     @Results({
             @Result(property = "roleType", column = "roleType", javaType = RoleType.class, typeHandler = RoleTypeHandler.class)
     })
-    People getUser(int userId);
-
-    @Select("SELECT user_id AS userId, user_ac_id AS userAcId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user WHERE user_username = #{username}")
+    User getUserById(int userId);
+    @Select("SELECT user_id AS userId, user_ac_id AS userAcId, user_username AS username, user_password as password, user_role AS roleType FROM t_user WHERE user_username=#{username}")
     @Results({
-            @Result(property = "roleType", column = "roleType", javaType = RoleType.class, typeHandler = RoleTypeHandler.class)
+            @Result(property = "roleType", column = "roleType",javaType =RoleType.class,typeHandler = RoleTypeHandler.class)
     })
-    User getUser(String username);
+    User getUserByUsername(String username);
 
     @Select("SELECT user_id AS userId, user_ac_id AS userAcId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user")
     @Results({
             @Result(property = "roleType", column = "roleType", javaType = RoleType.class, typeHandler = RoleTypeHandler.class)
     })
-    List<People> getAllUser();
+    List<User> getAllUser();
 }
 

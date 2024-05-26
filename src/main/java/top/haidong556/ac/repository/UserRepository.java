@@ -34,27 +34,27 @@ public class UserRepository {
         }
     }
 
-    public People getUser(int userId) {
+    public User getUser(int userId) {
         try (SqlSession session = MysqlFactory.getSession()) {
             UserMapper mapper = session.getMapper(UserMapper.class);
-            return mapper.getUser(userId);
+            return mapper.getUserById(userId);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to get user by ID", e);
         }
     }
 
-    public People getUser(String username) {
+    public User getUser(String username) {
         try (SqlSession session = MysqlFactory.getSession()) {
             UserMapper mapper = session.getMapper(UserMapper.class);
-            return mapper.getUser(username);
+            return mapper.getUserByUsername(username);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to get user by username", e);
         }
     }
 
-    public List<People> getAllUser() {
+    public List<User> getAllUser() {
         try (SqlSession session = MysqlFactory.getSession()) {
             UserMapper mapper = session.getMapper(UserMapper.class);
             return mapper.getAllUser();

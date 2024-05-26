@@ -15,26 +15,30 @@ import java.util.List;
 @Service
 public class BillService {
     private BillRepository billRepository;
+
     @Autowired
-    private void setBillRepository(){}
+    private void setBillRepository() {
+    }
 
 
     public BillTable getBillItemByTime(LocalDateTime createTime, LocalDateTime endTime) {
         List<BillItem> billItemByTime = billRepository.getBillItemByTime(createTime, endTime);
-        BillTable billTable=new BillTable();
-        return
+        BillTable billTable = new BillTable.Builder()
+                .withBillItems(billItemByTime)
+                .build();
+        return billTable;
     }
 
     // Create a new bill item
     public void createBillItem(BillItem billItem) {
+        billRepository.createBillItem(billItem);
 
     }
 
     // Delete a bill item by ID
     public void deleteBillItem(int billItemId) {
-
+        billRepository.deleteBillItem(billItemId);
     }
-
 
 
 }

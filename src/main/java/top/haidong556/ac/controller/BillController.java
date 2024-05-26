@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.time.LocalDateTime;
 
 @Controller
-@RequestMapping
+@RequestMapping("bill")
 public class BillController {
     private BillService billService;
     @Autowired
     public void setBillService(){}
-    @GetMapping("/getCostTableByTime")
+    @GetMapping()
     public void getCostTableByTime(LocalDateTime startTime,LocalDateTime endTime){
         BillTable billItemByTime = billService.getBillItemByTime(startTime, endTime);
     }
