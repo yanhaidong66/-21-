@@ -20,13 +20,18 @@ public class AdminController {
     }
 
     @GetMapping("/all")
-    public String getAllAcState(){
+    public ModelAndView getAllAcState(){
+        ModelAndView modelAndView=new ModelAndView("allAc");
         List<Ac> allAcState = acService.getAllAcState();
-        return null;
+        return modelAndView;
     }
     @PostMapping()
-    public void addAc(Ac newAc){
+    public ModelAndView addAc(Ac newAc){
         acService.addAc(newAc);
+        ModelAndView modelAndView=new ModelAndView("allAc");
+        List<Ac> allAcState = acService.getAllAcState();
+        modelAndView.addObject("allAc",allAcState);
+        return modelAndView;
     }
     @PatchMapping("/temp")
     public ModelAndView changeAcTemp(int acId, int newTemp){
@@ -37,22 +42,28 @@ public class AdminController {
     }
 
     @PatchMapping("/windSpeed")
-    public void changeAcWindSpeed(int acId,int newWindSpeed){
+    public ModelAndView changeAcWindSpeed(int acId,int newWindSpeed){
         acService.changeAcWindSpeed(acId,newWindSpeed);
-    }
-    @GetMapping("/close")
-    public void closeAc(int acId){
-        acService.closeAc(acId);
-    }
-    @GetMapping("/open")
-    public void openAc(int acId){
-        acService.openAc(acId);
-    }
-    @GetMapping()
-    public ModelAndView getAcState(){
-        Ac acState = acService.getAcState();
-        ModelAndView modelAndView=new ModelAndView("ac");
-        modelAndView.addObject("acState",acState);
+        ModelAndView modelAndView=new ModelAndView("allAc");
+        List<Ac> allAcState = acService.getAllAcState();
+        modelAndView.addObject("allAc",allAcState);
         return modelAndView;
     }
+    @GetMapping("/close")
+    public ModelAndView closeAc(int acId){
+        acService.closeAc(acId);
+        ModelAndView modelAndView=new ModelAndView("allAc");
+        List<Ac> allAcState = acService.getAllAcState();
+        modelAndView.addObject("allAc",allAcState);
+        return modelAndView;
+    }
+    @GetMapping("/open")
+    public ModelAndView openAc(int acId){
+        acService.openAc(acId);
+        ModelAndView modelAndView=new ModelAndView("allAc");
+        List<Ac> allAcState = acService.getAllAcState();
+        modelAndView.addObject("allAc",allAcState);
+        return modelAndView;
+    }
+
 }

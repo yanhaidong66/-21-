@@ -35,16 +35,28 @@ public class UserController {
     }
 
     @PatchMapping("/windSpeed")
-    public void changeAcWindSpeed(int acId,int newWindSpeed){
+    public ModelAndView changeAcWindSpeed(int acId,int newWindSpeed){
         acService.changeAcWindSpeed(acId,newWindSpeed);
+        Ac acState = acService.getAcState();
+        ModelAndView modelAndView=new ModelAndView("ac");
+        modelAndView.addObject("acState",acState);
+        return modelAndView;
     }
     @GetMapping("/close")
-    public void closeAc(int acId){
+    public ModelAndView closeAc(int acId){
         acService.closeAc(acId);
+        Ac acState = acService.getAcState();
+        ModelAndView modelAndView=new ModelAndView("ac");
+        modelAndView.addObject("acState",acState);
+        return modelAndView;
     }
     @GetMapping("/open")
-    public void openAc(int acId){
+    public ModelAndView openAc(int acId){
         acService.openAc(acId);
+        Ac acState = acService.getAcState();
+        ModelAndView modelAndView=new ModelAndView("ac");
+        modelAndView.addObject("acState",acState);
+        return modelAndView;
     }
     @GetMapping()
     public ModelAndView getAcState(){
