@@ -17,7 +17,8 @@ public class BillService {
     private BillRepository billRepository;
 
     @Autowired
-    private void setBillRepository() {
+    public BillService(BillRepository billRepository){
+        this.billRepository=billRepository;
     }
 
 

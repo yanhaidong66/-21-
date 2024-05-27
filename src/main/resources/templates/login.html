@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>登录</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+        .login-container {
+            width: 300px;
+            padding: 20px;
+            box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
+            background-color: white;
+            text-align: center;
+            position: relative;
+        }
+        h2 {
+            margin-top: 0;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #004494;
+        }
+        .alert {
+            position: absolute;
+            top: -50px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            width: 80%;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div class="alert" id="error-message">
+        用户名或密码错误，请重试。
+    </div>
+    <h2>分布式温控系统</h2>
+    <form th:action="@{/login}" method="post">
+        <input type="text" name="username" placeholder="用户名" required>
+        <input type="password" name="password" placeholder="密码" required>
+        <button type="submit">登录</button>
+    </form>
+</div>
+
+<script>
+    // 检查URL中的错误参数并显示错误消息
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('error')) {
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.style.display = 'block';
+            // 自动隐藏错误消息
+            setTimeout(function() {
+                errorMessage.style.display = 'none';
+            }, 3000); // 3秒后隐藏
+        }
+    }
+</script>
+</body>
+</html>

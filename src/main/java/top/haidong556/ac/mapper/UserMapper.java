@@ -23,7 +23,7 @@ public interface UserMapper {
             @Result(property = "roleType", column = "roleType", javaType = RoleType.class, typeHandler = RoleTypeHandler.class)
     })
     User getUserById(int userId);
-    @Select("SELECT user_id AS userId, user_ac_id AS userAcId, user_username AS username, user_password as password, user_role AS roleType FROM t_user WHERE user_username=#{username}")
+    @Select("SELECT user_id AS userId, user_ac_id AS acId, user_username AS username, user_password as password, user_role AS roleType FROM t_user WHERE user_username=#{username} and user_role = 'USER'")
     @Results({
             @Result(property = "roleType", column = "roleType",javaType =RoleType.class,typeHandler = RoleTypeHandler.class)
     })

@@ -14,7 +14,10 @@ import top.haidong556.ac.service.AcService;
 public class AcOperationController {
     private AcService acService;
     @Autowired
-    private void setAcService(){}
+    public AcOperationController(AcService acService) {
+        this.acService = acService;
+    }
+
     @GetMapping("/byUserId/{userId}")
     public void getAcOperationTableByUserId(@PathVariable("userId") int userId){
         OperationTable acDetailTableByUserId = acService.getAcDetailTableByUserId(userId);

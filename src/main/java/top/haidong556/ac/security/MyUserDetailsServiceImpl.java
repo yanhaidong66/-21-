@@ -8,8 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsPasswordService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import top.haidong556.ac.entity.role.People;
-import top.haidong556.ac.entity.role.UserDetailsAdapter;
+import top.haidong556.ac.entity.role.*;
 import top.haidong556.ac.service.UserService;
 
 import java.util.ArrayList;
@@ -20,20 +19,28 @@ public class MyUserDetailsServiceImpl implements UserDetailsService,UserDetailsP
 
     private final UserService userService;
 
-    public UserDetails currentUser() {
+    public User currentUser() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-        return new UserDetailsAdapter(userService.getUser(username));
+        return userService.getUser(username);
     }
 
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final People user = userService.getUser(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("用户不存在");
-        }
-        return new UserDetailsAdapter(user);
+        User user = userService.getUser(username);
+        if(user!=null)
+            return new UserDetailsAdapter(user);
+        Manager manager=userService.getManager(username);
+        if(manager!=null)
+            return new UserDetailsAdapter(manager);
+        Waiter waiter=userService.getWaiter(username);
+        if(waiter!=null)
+            return new UserDetailsAdapter(waiter);
+        Admin admin=userService.getAdmin(username);
+        if(admin!=null)
+            return new UserDetailsAdapter(admin);
+        throw new UsernameNotFoundException("not found");
     }
 
 

@@ -12,6 +12,9 @@ public class UserDetailsAdapter implements UserDetails {
     public UserDetailsAdapter(People user) {
         this.user = user;
     }
+    public People getUser(){
+        return user;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

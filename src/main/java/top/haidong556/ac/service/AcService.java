@@ -1,12 +1,18 @@
 package top.haidong556.ac.service;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import top.haidong556.ac.entity.ac.Ac;
 import top.haidong556.ac.entity.operationDetail.OperationItem;
 import top.haidong556.ac.entity.operationDetail.OperationTable;
+import top.haidong556.ac.entity.role.People;
+import top.haidong556.ac.entity.role.User;
+import top.haidong556.ac.entity.role.UserDetailsAdapter;
 import top.haidong556.ac.repository.AcOperationRepository;
 import top.haidong556.ac.repository.AcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import top.haidong556.ac.security.MyUserDetailsServiceImpl;
 
 import java.util.List;
 
@@ -14,11 +20,13 @@ import java.util.List;
 public class AcService {
     private final AcRepository acRepository;
     private final AcOperationRepository acOperationRepository;
+    private MyUserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    public AcService(AcRepository acRepository, AcOperationRepository acOperationRepository) {
+    public AcService(AcRepository acRepository, AcOperationRepository acOperationRepository,MyUserDetailsServiceImpl userDetailsService) {
         this.acRepository = acRepository;
         this.acOperationRepository = acOperationRepository;
+        this.userDetailsService=userDetailsService;
     }
 
     public void addAc(Ac ac) {
@@ -63,7 +71,9 @@ public class AcService {
         return table;
     }
 
-    public Ac getAcState(int acId) {
+    public Ac getAcState() {
+        User user = userDetailsService.currentUser();
+        int acId = user.getAcId();
         return acRepository.getAcState(acId);
     }
     public List<Ac> getAllAcState() {

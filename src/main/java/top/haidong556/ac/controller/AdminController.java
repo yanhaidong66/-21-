@@ -1,21 +1,29 @@
 package top.haidong556.ac.controller;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import top.haidong556.ac.entity.ac.Ac;
-import top.haidong556.ac.entity.operationDetail.OperationItem;
 import top.haidong556.ac.service.AcService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
 @Controller
-@RequestMapping("/ac")
-public class AcController {
+@RequestMapping("/admin")
+public class AdminController {
     private AcService acService;
-    @Autowired
-    private void setAcService(){}
+    public AdminController(AcService acService){
+        this.acService=acService;
+    }
+
+    @GetMapping("/all")
+    public String getAllAcState(){
+        List<Ac> allAcState = acService.getAllAcState();
+        return null;
+    }
     @PostMapping()
     public void addAc(Ac newAc){
         acService.addAc(newAc);
@@ -23,7 +31,7 @@ public class AcController {
     @PatchMapping("/temp")
     public ModelAndView changeAcTemp(int acId, int newTemp){
         ModelAndView modelAndView=new ModelAndView();
-        modelAndView.setViewName("home");
+        modelAndView.setViewName("login");
         acService.changeAcTemp(acId,newTemp);
         return modelAndView;
     }
@@ -40,15 +48,11 @@ public class AcController {
     public void openAc(int acId){
         acService.openAc(acId);
     }
-    @GetMapping("/state")
-    public Ac getAcState(int acId){
-        return acService.getAcState(acId);
+    @GetMapping()
+    public ModelAndView getAcState(){
+        Ac acState = acService.getAcState();
+        ModelAndView modelAndView=new ModelAndView("ac");
+        modelAndView.addObject("acState",acState);
+        return modelAndView;
     }
-    @GetMapping("/all")
-    public String getAllAcState(){
-        List<Ac> allAcState = acService.getAllAcState();
-        return null;
-    }
-
-
 }

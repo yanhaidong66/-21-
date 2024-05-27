@@ -5,34 +5,50 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import top.haidong556.ac.security.handler.CustomAuthenticationSuccessHandler;
 import top.haidong556.ac.service.UserService;
+
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http
-    ) throws Exception {
-        http.authorizeHttpRequests(auth->{
-            auth.anyRequest().permitAll();
+                                                   , CustomAuthenticationSuccessHandler successHandler
+                                                   ) throws Exception {
+        http.authorizeHttpRequests(auth -> {
+            auth.requestMatchers("/login").permitAll()  // 公开访问的路径
+                    .anyRequest().authenticated();
+
         });
 
-
-        http.csrf(auth->{
+        http.csrf(auth -> {
             auth.disable();
         });
 
-
-        http.rememberMe(auth->{
+        http.rememberMe(auth -> {
             auth.disable();
         });
+        http.formLogin(login -> {
+            login.loginPage("/login")
+                    .passwordParameter("password")
+                    .usernameParameter("username")
+                    .loginProcessingUrl("/login")
+                    .successHandler(successHandler)
+                    .failureUrl("/login?error=true")
+                    .permitAll();
+        });
+
 
         return http.build();
     }
+
     @Bean
     public AuthenticationManager myAuthenticationManager(DaoAuthenticationProvider myDaoAuthenticationProvider) throws Exception {
-        ProviderManager providerManager=new ProviderManager(myDaoAuthenticationProvider);
+        ProviderManager providerManager = new ProviderManager(myDaoAuthenticationProvider);
         return providerManager;
     }
 
@@ -45,6 +61,7 @@ public class SecurityConfig {
                 return rawPassword.toString();
 
             }
+
             @Override
             public boolean matches(CharSequence rawPassword, String encodedPassword) {
                 return encodedPassword.matches(rawPassword.toString());
