@@ -1,9 +1,13 @@
 package top.haidong556.ac.entity.role;
 
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 @Data
-public abstract class People {
+public abstract class People  {
     private  RoleType roleType;
     private String username;
     private String password;
@@ -22,4 +26,5 @@ public abstract class People {
     public enum RoleType {
         USER(), ADMIN(), MANAGER(), WAITER();
     }
+    public abstract Collection<? extends GrantedAuthority> getAuthorities();
 }

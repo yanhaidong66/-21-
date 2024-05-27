@@ -24,6 +24,7 @@ public class UserService {
     public People getUser(int userId){
         return userRepository.getUser(userId);
     }
+    public People getUser(String username){return userRepository.getUser(username);}
     public List<User> getAllUser(){
         return userRepository.getAllUser();
     }
