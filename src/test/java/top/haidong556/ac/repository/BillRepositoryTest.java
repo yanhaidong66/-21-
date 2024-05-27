@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import top.haidong556.ac.entity.bill.BillItem;
+import top.haidong556.ac.entity.role.User;
 import top.haidong556.ac.mapper.BillMapper;
+import top.haidong556.ac.mapper.UserMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,26 +15,26 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = {
         BillRepository.class,
-        BillMapper.class
+        BillMapper.class,
+        BillItem.class,
+        UserRepository.class,
+        UserMapper.class
 })
 class BillRepositoryTest {
 
     @Autowired
     private BillRepository billRepository;
-
     @Autowired
-    private BillMapper billMapper;
-
+    private UserRepository userRepository;
     private BillItem billItem;
 
     @BeforeEach
     void setUp() {
         billItem = new BillItem();
-        billItem.setBill_id(1);
         billItem.setState(BillItem.BillState.NOT_PAY);
-        billItem.setDatetime(LocalDateTime.now());
-        billItem.setUserId(1);
-        billItem.setAcId(1);
+        billItem.setCreateTime(LocalDateTime.now());
+        billItem.setUserId(2);
+        billItem.setAcId(2);
 
         billRepository.createBillItem(billItem);
     }
@@ -51,15 +53,10 @@ class BillRepositoryTest {
 
     @Test
     void createBillItem() {
-        BillItem newBillItem = new BillItem();
-        newBillItem.setState(BillItem.BillState.HAVE_PAY);
-        newBillItem.setDatetime(LocalDateTime.now());
-        newBillItem.setUserId(2);
-        newBillItem.setAcId(2);
 
-        billRepository.createBillItem(newBillItem);
+        billRepository.createBillItem(billItem);
 
-        List<BillItem> billItems = billRepository.getBillItemByTime(newBillItem.getDatetime().minusMinutes(1), newBillItem.getDatetime().plusMinutes(1));
+        List<BillItem> billItems = billRepository.getBillItemByTime(billItem.getCreateTime().minusMinutes(1),billItem.getCreateTime().plusMinutes(1));
 
         assertNotNull(billItems);
         assertTrue(billItems.stream().anyMatch(bill -> bill.getUserId() == 2));
@@ -67,9 +64,9 @@ class BillRepositoryTest {
 
     @Test
     void deleteBillItem() {
-        billRepository.deleteBillItem(billItem.getBill_id());
+        billRepository.deleteBillItem(billItem.getBillId());
 
-        List<BillItem> billItems = billRepository.getBillItemByTime(billItem.getDatetime().minusMinutes(1), billItem.getDatetime().plusMinutes(1));
+        List<BillItem> billItems = billRepository.getBillItemByTime(billItem.getCreateTime().minusMinutes(1), billItem.getCreateTime().plusMinutes(1));
 
         assertTrue(billItems.isEmpty());
     }

@@ -7,6 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import top.haidong556.ac.entity.ac.Ac;
 import top.haidong556.ac.mapper.AcMapper;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest( classes = {
         AcRepository.class,
@@ -134,5 +136,11 @@ class AcRepositoryTest {
         Ac retrievedAc = acRepository.getAcState(ac.getAcId());
 
         assertEquals(18, retrievedAc.getTemp());
+    }
+
+    @Test
+    void getAllAcState() {
+        List<Ac> allAcState = acRepository.getAllAcState();
+        System.out.println(allAcState);
     }
 }

@@ -17,7 +17,7 @@ public interface BillMapper {
     })
     List<BillItem> getBillItemByTime(@Param("createTime") LocalDateTime createTime, @Param("endTime") LocalDateTime endTime);
 
-    @Insert("INSERT INTO t_bill (bill_state, bill_create_time, bill_user_id, bill_ac_id) VALUES (#{state}, #{datetime}, #{userId}, #{acId})")
+    @Insert("INSERT INTO t_bill (bill_state, bill_create_time, bill_user_id, bill_ac_id) VALUES (#{state}, #{createTime}, #{userId}, #{acId})")
     @Options(useGeneratedKeys = true, keyProperty = "billId")
     void createBillItem(BillItem billItem);
 

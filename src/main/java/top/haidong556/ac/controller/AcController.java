@@ -1,13 +1,14 @@
 package top.haidong556.ac.controller;
 
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import top.haidong556.ac.entity.ac.Ac;
+import top.haidong556.ac.entity.operationDetail.OperationItem;
 import top.haidong556.ac.service.AcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/ac")
@@ -20,13 +21,16 @@ public class AcController {
         acService.addAc(newAc);
     }
     @PatchMapping("/temp")
-    public void changeAcTemp(int acId,int newTemp){
-
+    public ModelAndView changeAcTemp(int acId, int newTemp){
+        ModelAndView modelAndView=new ModelAndView();
+        modelAndView.setViewName("home");
+        acService.changeAcTemp(acId,newTemp);
+        return modelAndView;
     }
 
     @PatchMapping("/windSpeed")
     public void changeAcWindSpeed(int acId,int newWindSpeed){
-
+        acService.changeAcWindSpeed(acId,newWindSpeed);
     }
     @GetMapping("/close")
     public void closeAc(int acId){
@@ -36,13 +40,14 @@ public class AcController {
     public void openAc(int acId){
         acService.openAc(acId);
     }
-    @GetMapping("/detail")
-    public void getDetail(int acId){
-
-    }
     @GetMapping("/state")
     public Ac getAcState(int acId){
         return acService.getAcState(acId);
+    }
+    @GetMapping("/all")
+    public String getAllAcState(){
+        List<Ac> allAcState = acService.getAllAcState();
+        return null;
     }
 
 

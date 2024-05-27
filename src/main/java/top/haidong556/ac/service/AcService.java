@@ -23,22 +23,28 @@ public class AcService {
 
     public void addAc(Ac ac) {
         acRepository.addAc(ac);
+        System.out.println("添加空调设备："+ac);
     }
 
     public void changeAcTemp(int acId, int newTemp) {
         acRepository.changeAcTemp(acId, newTemp);
+        System.out.println("修改空调id="+acId+"温度为"+newTemp);
     }
 
     public void changeAcWindSpeed(int acId, int newWindSpeed) {
         acRepository.changeAcWindSpeed(acId, newWindSpeed);
+        System.out.println("修改空调"+acId+"风速为："+newWindSpeed);
     }
 
     public void closeAc(int acId) {
         acRepository.closeAc(acId);
+        System.out.println("关闭空调"+acId);
+
     }
 
     public void openAc(int acId) {
         acRepository.openAc(acId);
+        System.out.println("打开空调"+acId);
     }
 
     public OperationTable getAcDetailTableByUserId(int userId) {
@@ -59,5 +65,12 @@ public class AcService {
 
     public Ac getAcState(int acId) {
         return acRepository.getAcState(acId);
+    }
+    public List<Ac> getAllAcState() {
+        return acRepository.getAllAcState();
+    }
+
+    public void createOperationItem(OperationItem operationItem){
+        acOperationRepository.createOperationItem(operationItem);
     }
 }

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 import top.haidong556.ac.mapper.AcMapper;
 import top.haidong556.ac.util.MysqlFactory;
 
+import java.util.List;
+
 @Repository
 public class AcRepository {
 
@@ -24,6 +26,15 @@ public class AcRepository {
         try (SqlSession session = MysqlFactory.getSession()) {
             AcMapper mapper = session.getMapper(AcMapper.class);
             return mapper.getAcState(acId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to get AC state", e);
+        }
+    }
+    public List<Ac> getAllAcState() {
+        try (SqlSession session = MysqlFactory.getSession()) {
+            AcMapper mapper = session.getMapper(AcMapper.class);
+            return mapper.getAllAcState();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to get AC state", e);

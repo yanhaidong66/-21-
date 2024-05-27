@@ -3,6 +3,8 @@ package top.haidong556.ac.mapper;
 import org.apache.ibatis.annotations.*;
 import top.haidong556.ac.entity.ac.Ac;
 
+import java.util.List;
+
 @Mapper
 public interface AcMapper {
 
@@ -11,6 +13,8 @@ public interface AcMapper {
     void addAc(Ac ac);
     @Select("SELECT ac_state AS acState, ac_id AS acId, ac_wind_speed AS windSpeed, ac_temp AS temp, ac_room AS room, ac_cost_per_hour AS costPerHour FROM t_ac WHERE ac_id = #{acId}")
     Ac getAcState(int acId);
+    @Select("SELECT ac_state AS acState, ac_id AS acId, ac_wind_speed AS windSpeed, ac_temp AS temp, ac_room AS room, ac_cost_per_hour AS costPerHour FROM t_ac ")
+    List<Ac> getAllAcState();
 
     @Update("UPDATE t_ac SET ac_state = 0 WHERE ac_id = #{acId}")
     void closeAc(int acId);
