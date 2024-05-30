@@ -21,11 +21,20 @@ public class AcRepository {
             throw new RuntimeException("Failed to add AC", e);
         }
     }
+    public Ac getAcState(String acRoom){
+        try (SqlSession session = MysqlFactory.getSession()) {
+            AcMapper mapper = session.getMapper(AcMapper.class);
+            return mapper.getAcStateByRoom(acRoom);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to get AC state", e);
+        }
+    }
 
     public Ac getAcState(int acId) {
         try (SqlSession session = MysqlFactory.getSession()) {
             AcMapper mapper = session.getMapper(AcMapper.class);
-            return mapper.getAcState(acId);
+            return mapper.getAcStateById(acId);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to get AC state", e);
@@ -37,7 +46,7 @@ public class AcRepository {
             return mapper.getAllAcState();
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Failed to get AC state", e);
+            throw new RuntimeException("Failed to get all AC state", e);
         }
     }
 
@@ -82,6 +91,26 @@ public class AcRepository {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to change AC temperature", e);
+        }
+    }
+    public void deleteAc(int acId){
+        try (SqlSession session = MysqlFactory.getSession()) {
+            AcMapper mapper = session.getMapper(AcMapper.class);
+            mapper.deleteAcById(acId);
+            session.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to delete AC", e);
+        }
+    }
+    public void deleteAc(String acRoom){
+        try (SqlSession session = MysqlFactory.getSession()) {
+            AcMapper mapper = session.getMapper(AcMapper.class);
+            mapper.deleteAcByRoom(acRoom);
+            session.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to delete AC", e);
         }
     }
 }

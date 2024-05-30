@@ -3,18 +3,16 @@ create database db_ac;
 use db_ac;
 CREATE TABLE t_ac(
                      ac_id INT PRIMARY KEY AUTO_INCREMENT,
-                     ac_room VARCHAR(30) NOT NULL,
+                     ac_room VARCHAR(30) UNIQUE NOT NULL,
                      ac_state TINYINT NOT NULL DEFAULT 0, /* 0未开启，1已开启*/
-                     ac_user_id INT NOT NULL DEFAULT 0,
                      ac_temp TINYINT NOT NULL DEFAULT 20,
                      ac_wind_speed MEDIUMINT NOT NULL DEFAULT 20,
-                     ac_cost_per_hour INT NOT NULL DEFAULT 10,
                      INDEX (ac_room)
 );
 create table t_user(
                        user_id int primary key auto_increment,
                        user_ac_id int not null,
-                       user_username varchar(30) not null ,
+                       user_username varchar(30) UNIQUE not null ,
                        user_password varchar(30) not null ,
                        user_role varchar(10) not null default 'USER',
                        user_create_time datetime not null default now(),
@@ -44,3 +42,10 @@ create table t_bill(
     constraint fk_bill_user foreign key t_bill(bill_user_id) references t_user(user_id),
     constraint fk_bill_ac foreign key t_bill(bill_ac_id) references t_ac(ac_id)
 );
+insert into t_ac( ac_room, ac_state, ac_temp, ac_wind_speed) values  ('room',1,2,2);
+insert into t_ac( ac_room, ac_state, ac_temp, ac_wind_speed) values  ('room1',1,2,2);
+insert into t_user( user_ac_id, user_username, user_password, user_role) values (1,'user','user','USER');
+insert into t_user( user_ac_id, user_username, user_password, user_role) values (1,'waiter','waiter','WAITER');
+insert into t_user( user_ac_id, user_username, user_password, user_role) values (1,'admin','admin','ADMIN');
+insert into t_user( user_ac_id, user_username, user_password, user_role) values (1,'manager','manager','MANAGER');
+

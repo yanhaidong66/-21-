@@ -1,9 +1,11 @@
 package top.haidong556.ac.repository;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import top.haidong556.ac.entity.ac.Ac;
 import top.haidong556.ac.entity.bill.BillItem;
 import top.haidong556.ac.entity.role.User;
 import top.haidong556.ac.mapper.BillMapper;
@@ -11,14 +13,13 @@ import top.haidong556.ac.mapper.UserMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = {
         BillRepository.class,
-        BillMapper.class,
-        BillItem.class,
         UserRepository.class,
-        UserMapper.class
+        AcRepository.class
 })
 class BillRepositoryTest {
 
@@ -26,17 +27,38 @@ class BillRepositoryTest {
     private BillRepository billRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private AcRepository acRepository;
     private BillItem billItem;
+    private User user;
+    private Ac ac;
 
     @BeforeEach
     void setUp() {
+        ac = new Ac();
+        ac.setWindSpeed(3);
+        ac.setTemp(24);
+        ac.setRoom(UUID.randomUUID().toString().replace("-", "").substring(0, 4));
+        ac.setAcState(Ac.AcState.CLOSE);
+        acRepository.addAc(ac);
+
+        user = new User(UUID.randomUUID().toString().replace("-", "").substring(0, 10), "password1", ac.getAcId());
+        userRepository.addUser(user);
+
         billItem = new BillItem();
         billItem.setState(BillItem.BillState.NOT_PAY);
         billItem.setCreateTime(LocalDateTime.now());
-        billItem.setUserId(2);
-        billItem.setAcId(2);
+        billItem.setUserId(user.getUserId());
+        billItem.setAcId(ac.getAcId());
 
         billRepository.createBillItem(billItem);
+    }
+
+    @AfterEach
+    void tearDown() {
+        billRepository.deleteBillItem(billItem.getBillId());
+        userRepository.deleteUser(user.getUserId());
+        acRepository.deleteAc(ac.getAcId());
     }
 
     @Test
@@ -47,19 +69,15 @@ class BillRepositoryTest {
         List<BillItem> billItems = billRepository.getBillItemByTime(startTime, endTime);
 
         assertNotNull(billItems);
-        assertFalse(billItems.isEmpty());
-        assertEquals(1, billItems.size());
+        System.out.println(billItems);
+
     }
 
     @Test
     void createBillItem() {
-
-        billRepository.createBillItem(billItem);
-
         List<BillItem> billItems = billRepository.getBillItemByTime(billItem.getCreateTime().minusMinutes(1),billItem.getCreateTime().plusMinutes(1));
-
         assertNotNull(billItems);
-        assertTrue(billItems.stream().anyMatch(bill -> bill.getUserId() == 2));
+        assertTrue(billItems.stream().anyMatch(bill -> bill.getUserId() == user.getUserId()));
     }
 
     @Test

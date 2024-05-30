@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>查询功能</title>
+    <style>
+        .query-container {
+            padding: 20px;
+            margin: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 300px;
+        }
+
+        .query-container label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .query-container input[type="date"] {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .query-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .query-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div class="query-container">
+    <form method="GET" action="/query">
+        <label for="start-date">开始时间:</label>
+        <input type="date" id="start-date" name="startDate" required>
+
+        <label for="end-date">结束时间:</label>
+        <input type="date" id="end-date" name="endDate" required>
+
+        <button type="submit">查询</button>
+    </form>
+</div>
+</body>
+</html>

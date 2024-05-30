@@ -48,4 +48,15 @@ public class AcOperationRepository {
             throw new RuntimeException("Failed to create AC operation item", e);
         }
     }
+    public void deleteOperationItem(int opId) {
+        try (SqlSession session = MysqlFactory.getSession()) {
+            AcOperationMapper mapper = session.getMapper(AcOperationMapper.class);
+            mapper.deleteOperationItem(opId);
+            session.commit();
+        } catch (Exception e) {
+            // Handle exception if needed
+            e.printStackTrace();
+            throw new RuntimeException("Failed to delete AC operation item", e);
+        }
+    }
 }

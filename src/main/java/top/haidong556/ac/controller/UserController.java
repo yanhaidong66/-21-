@@ -4,67 +4,66 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import top.haidong556.ac.entity.ac.Ac;
-import top.haidong556.ac.entity.role.People;
 import top.haidong556.ac.entity.role.User;
 import org.springframework.stereotype.Controller;
+import top.haidong556.ac.security.MyUserDetailsServiceImpl;
 import top.haidong556.ac.service.AcService;
-import top.haidong556.ac.service.UserService;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
     private AcService acService;
+    private MyUserDetailsServiceImpl userDetailsService;
     @Autowired
-    public UserController(AcService acService){
+    public UserController(AcService acService,MyUserDetailsServiceImpl userDetailsService){
+        this.userDetailsService=userDetailsService;
         this.acService=acService;
     }
     @GetMapping()
     public ModelAndView getUserPage(){
+        User user = userDetailsService.currentUser();
+        int acId = user.getAcId();
+        acService.openAc(acId);
+        Ac acState = acService.getAcState(acId);
         ModelAndView modelAndView=new ModelAndView("user");
+        modelAndView.addObject("acState",acState);
+        modelAndView.addObject("user",user);
         return modelAndView;
     }
     @PatchMapping("/temp")
-    public ModelAndView changeAcTemp(int acId, int newTemp){
-        ModelAndView modelAndView=new ModelAndView();
-        modelAndView.setViewName("login");
+    public ModelAndView changeAcTemp(int newTemp){
+        User user = userDetailsService.currentUser();
+        int acId = user.getAcId();
         acService.changeAcTemp(acId,newTemp);
+        Ac acState = acService.getAcState(acId);
+        ModelAndView modelAndView=new ModelAndView("user");
+        modelAndView.addObject("acState",acState);
         return modelAndView;
     }
 
     @PatchMapping("/windSpeed")
-    public ModelAndView changeAcWindSpeed(int acId,int newWindSpeed){
+    public ModelAndView changeAcWindSpeed(int newWindSpeed){
+        User user = userDetailsService.currentUser();
+        int acId = user.getAcId();
         acService.changeAcWindSpeed(acId,newWindSpeed);
-        Ac acState = acService.getAcState();
-        ModelAndView modelAndView=new ModelAndView("ac");
+        Ac acState = acService.getAcState(acId);
+        ModelAndView modelAndView=new ModelAndView("user");
         modelAndView.addObject("acState",acState);
         return modelAndView;
     }
     @GetMapping("/close")
-    public ModelAndView closeAc(int acId){
+    public ModelAndView closeAc(){
+        User user = userDetailsService.currentUser();
+        int acId = user.getAcId();
         acService.closeAc(acId);
-        Ac acState = acService.getAcState();
-        ModelAndView modelAndView=new ModelAndView("ac");
+        Ac acState = acService.getAcState(acId);
+        ModelAndView modelAndView=new ModelAndView("user");
         modelAndView.addObject("acState",acState);
         return modelAndView;
     }
-    @GetMapping("/open")
-    public ModelAndView openAc(int acId){
-        acService.openAc(acId);
-        Ac acState = acService.getAcState();
-        ModelAndView modelAndView=new ModelAndView("ac");
-        modelAndView.addObject("acState",acState);
-        return modelAndView;
-    }
-    @GetMapping()
-    public ModelAndView getAcState(){
-        Ac acState = acService.getAcState();
-        ModelAndView modelAndView=new ModelAndView("ac");
-        modelAndView.addObject("acState",acState);
-        return modelAndView;
-    }
+
+
 
 
 }

@@ -13,10 +13,10 @@ public interface WaiterMapper {
     @Options(useGeneratedKeys = true, keyProperty = "userId")
     void createWaiter(Waiter waiter);
 
-    @Delete("DELETE FROM t_user WHERE user_id = #{userId}")
+    @Delete("DELETE FROM t_user WHERE user_id = #{userId}  AND user_role = 'WAITER'")
     void deleteWaiter(int userId);
 
-    @Select("SELECT user_id AS userId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user WHERE user_id = #{userId}")
+    @Select("SELECT user_id AS userId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user WHERE user_id = #{userId} AND user_role = 'WAITER'")
     @Results({
             @Result(property = "roleType", column = "roleType", javaType = People.RoleType.class, typeHandler = RoleTypeHandler.class)
     })
@@ -27,7 +27,7 @@ public interface WaiterMapper {
     })
     Waiter getWaiterByUsername(String username);
 
-    @Select("SELECT user_id AS userId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user where user_role=3")
+    @Select("SELECT user_id AS userId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user where user_role = 'WAITER'")
     @Results({
             @Result(property = "roleType", column = "roleType", javaType = People.RoleType.class, typeHandler = RoleTypeHandler.class)
     })

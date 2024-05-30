@@ -14,10 +14,10 @@ import java.util.List;
 @Repository
 public class UserRepository {
 
-    public void addUser(People people) {
+    public void addUser(User user) {
         try (SqlSession session = MysqlFactory.getSession()) {
             UserMapper mapper = session.getMapper(UserMapper.class);
-            mapper.createUser((User) people);
+            mapper.createUser(user);
             session.commit();
         } catch (Exception e) {
             e.printStackTrace();

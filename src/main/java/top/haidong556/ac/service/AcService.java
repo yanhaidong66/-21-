@@ -4,7 +4,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import top.haidong556.ac.entity.ac.Ac;
 import top.haidong556.ac.entity.operationDetail.OperationItem;
-import top.haidong556.ac.entity.operationDetail.OperationTable;
 import top.haidong556.ac.entity.role.People;
 import top.haidong556.ac.entity.role.User;
 import top.haidong556.ac.entity.role.UserDetailsAdapter;
@@ -55,25 +54,18 @@ public class AcService {
         System.out.println("打开空调"+acId);
     }
 
-    public OperationTable getAcDetailTableByUserId(int userId) {
+    public List<OperationItem> getAcDetailTableByUserId(int userId) {
         List<OperationItem> acOperationTableByAcId = acOperationRepository.getAcOperationTableByUserId(userId);
-        OperationTable table = new OperationTable.Builder()
-                .setOperationItems(acOperationTableByAcId)
-                .build();
-        return table;
+        return acOperationTableByAcId;
     }
 
-    public OperationTable getAcDetailTableByAcId(int acId) {
+    public List<OperationItem> getAcDetailTableByAcId(int acId) {
         List<OperationItem> acOperationTableByAcId = acOperationRepository.getAcOperationTableByAcId(acId);
-        OperationTable table = new OperationTable.Builder()
-                .setOperationItems(acOperationTableByAcId)
-                .build();
-        return table;
+
+        return acOperationTableByAcId;
     }
 
-    public Ac getAcState() {
-        User user = userDetailsService.currentUser();
-        int acId = user.getAcId();
+    public Ac getAcState(int acId) {
         return acRepository.getAcState(acId);
     }
     public List<Ac> getAllAcState() {
@@ -83,4 +75,6 @@ public class AcService {
     public void createOperationItem(OperationItem operationItem){
         acOperationRepository.createOperationItem(operationItem);
     }
+
+
 }

@@ -19,10 +19,25 @@ public class MyUserDetailsServiceImpl implements UserDetailsService,UserDetailsP
 
     private final UserService userService;
 
-    public User currentUser() {
+    public  User currentUser() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        final String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-        return userService.getUser(username);
+        User user = (User) ((UserDetailsAdapter) authentication.getPrincipal()).getPeople();
+        return user;
+    }
+    public Manager currentManager(){
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Manager manager = (Manager) ((UserDetailsAdapter) authentication.getPrincipal()).getPeople();
+        return manager;
+    }
+    public Waiter currentWaiter(){
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Waiter waiter = (Waiter) ((UserDetailsAdapter) authentication.getPrincipal()).getPeople();
+        return waiter;
+    }
+    public Admin currentAdmin(){
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Admin admin = (Admin) ((UserDetailsAdapter) authentication.getPrincipal()).getPeople();
+        return admin;
     }
 
 

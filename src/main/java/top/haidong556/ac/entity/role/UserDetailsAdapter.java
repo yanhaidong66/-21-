@@ -12,7 +12,7 @@ public class UserDetailsAdapter implements UserDetails {
     public UserDetailsAdapter(People user) {
         this.user = user;
     }
-    public People getUser(){
+    public People getPeople(){
         return user;
     }
 

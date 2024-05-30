@@ -1,13 +1,9 @@
 package top.haidong556.ac.service;
 
-import org.apache.ibatis.session.SqlSession;
 import top.haidong556.ac.entity.bill.BillItem;
-import top.haidong556.ac.entity.bill.BillTable;
-import top.haidong556.ac.mapper.BillMapper;
 import top.haidong556.ac.repository.BillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import top.haidong556.ac.util.MysqlFactory;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,12 +18,10 @@ public class BillService {
     }
 
 
-    public BillTable getBillItemByTime(LocalDateTime createTime, LocalDateTime endTime) {
+    public List<BillItem> getBillItemByTime(LocalDateTime createTime, LocalDateTime endTime) {
         List<BillItem> billItemByTime = billRepository.getBillItemByTime(createTime, endTime);
-        BillTable billTable = new BillTable.Builder()
-                .withBillItems(billItemByTime)
-                .build();
-        return billTable;
+
+        return billItemByTime;
     }
 
     // Create a new bill item

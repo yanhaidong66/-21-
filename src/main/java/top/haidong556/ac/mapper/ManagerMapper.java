@@ -14,10 +14,10 @@ public interface ManagerMapper {
     @Options(useGeneratedKeys = true, keyProperty = "userId")
     void createManager(Manager waiter);
 
-    @Delete("DELETE FROM t_user WHERE user_id = #{userId}")
+    @Delete("DELETE FROM t_user WHERE user_id = #{userId}  WHERE user_role='MANAGER'")
     void deleteManager(int userId);
 
-    @Select("SELECT user_id AS userId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user WHERE user_id = #{userId}")
+    @Select("SELECT user_id AS userId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user WHERE user_id = #{userId} WHERE user_role='MANAGER'")
     @Results({
             @Result(property = "roleType", column = "roleType", javaType = People.RoleType.class, typeHandler = RoleTypeHandler.class)
     })
@@ -28,7 +28,7 @@ public interface ManagerMapper {
     })
     Manager getManagerByUsername(String username);
 
-    @Select("SELECT user_id AS userId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user where user_role=2")
+    @Select("SELECT user_id AS userId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user where user_role=2 WHERE user_role='MANAGER'")
     @Results({
             @Result(property = "roleType", column = "roleType", javaType = People.RoleType.class, typeHandler = RoleTypeHandler.class)
     })

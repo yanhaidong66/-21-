@@ -21,14 +21,15 @@ public class AdminController {
 
     @GetMapping("/all")
     public ModelAndView getAllAcState(){
-        ModelAndView modelAndView=new ModelAndView("allAc");
+        ModelAndView modelAndView=new ModelAndView("admin");
         List<Ac> allAcState = acService.getAllAcState();
+        modelAndView.addObject("allAc",allAcState);
         return modelAndView;
     }
     @PostMapping()
     public ModelAndView addAc(Ac newAc){
         acService.addAc(newAc);
-        ModelAndView modelAndView=new ModelAndView("allAc");
+        ModelAndView modelAndView=new ModelAndView("admin");
         List<Ac> allAcState = acService.getAllAcState();
         modelAndView.addObject("allAc",allAcState);
         return modelAndView;
@@ -44,7 +45,7 @@ public class AdminController {
     @PatchMapping("/windSpeed")
     public ModelAndView changeAcWindSpeed(int acId,int newWindSpeed){
         acService.changeAcWindSpeed(acId,newWindSpeed);
-        ModelAndView modelAndView=new ModelAndView("allAc");
+        ModelAndView modelAndView=new ModelAndView("admin");
         List<Ac> allAcState = acService.getAllAcState();
         modelAndView.addObject("allAc",allAcState);
         return modelAndView;
@@ -52,7 +53,7 @@ public class AdminController {
     @GetMapping("/close")
     public ModelAndView closeAc(int acId){
         acService.closeAc(acId);
-        ModelAndView modelAndView=new ModelAndView("allAc");
+        ModelAndView modelAndView=new ModelAndView("admin");
         List<Ac> allAcState = acService.getAllAcState();
         modelAndView.addObject("allAc",allAcState);
         return modelAndView;
@@ -60,7 +61,7 @@ public class AdminController {
     @GetMapping("/open")
     public ModelAndView openAc(int acId){
         acService.openAc(acId);
-        ModelAndView modelAndView=new ModelAndView("allAc");
+        ModelAndView modelAndView=new ModelAndView("admin");
         List<Ac> allAcState = acService.getAllAcState();
         modelAndView.addObject("allAc",allAcState);
         return modelAndView;

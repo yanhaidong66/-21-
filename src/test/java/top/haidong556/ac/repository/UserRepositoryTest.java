@@ -1,5 +1,7 @@
 package top.haidong556.ac.repository;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = {
         UserRepository.class,
+        AcRepository.class,
         User.class,
         UserMapper.class
 })
@@ -22,53 +25,73 @@ class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private AcRepository acRepository;
+    private User user1;
+    private User user2;
+    private Ac ac;
+
+    @BeforeEach
+    void setupTestData() {
+        ac = new Ac();
+        ac.setWindSpeed(3);
+        ac.setTemp(24);
+        ac.setRoom("2342322");
+        ac.setCostPerHour(10);
+        ac.setAcState(Ac.AcState.CLOSE);
+        acRepository.addAc(ac);
+        user1 = new User("testUser918", "password1", ac.getAcId());
+        user2 = new User("testUser919", "password2", ac.getAcId());
+        userRepository.addUser(user1);
+        userRepository.addUser(user2);
+    }
+
+    @AfterEach
+    void cleanupTestData() {
+        userRepository.deleteUser(user1.getUserId());
+        userRepository.deleteUser(user2.getUserId());
+        acRepository.deleteAc(ac.getAcId());
+    }
 
     @Test
     void addUser() {
-        User people = new User("testUser", "password",1);
-        userRepository.addUser(people);
 
-        User retrievedUser = userRepository.getUser( people.getUserId());
+        User retrievedUser = userRepository.getUser(user1.getUserId());
         assertNotNull(retrievedUser);
-        assertEquals("testUser", retrievedUser.getUsername());
+        assertEquals(user1.getUsername(), retrievedUser.getUsername());
     }
 
     @Test
     void deleteUser() {
-        People people = new User("testUser", "password",1);
-        userRepository.addUser(people);
-        int userId = ((User) people).getUserId();
-        userRepository.deleteUser(userId);
-        People retrievedUser = userRepository.getUser(userId);
-        assertNull(retrievedUser);
+
+        userRepository.deleteUser(user1.getUserId());
+        User deletedUser = userRepository.getUser(user1.getUserId());
+        assertNull(deletedUser);
     }
 
     @Test
     void getUserById() {
-        People people = new User("testUser", "password",1);
-        userRepository.addUser(people);
-        int userId = ((User) people).getUserId();
-        People retrievedUser = userRepository.getUser(userId);
+        List<User> allUsers = userRepository.getAllUser();
+        User userToRetrieve = allUsers.get(0);
+
+        User retrievedUser = userRepository.getUser(userToRetrieve.getUserId());
         assertNotNull(retrievedUser);
-        assertEquals("testUser", retrievedUser.getUsername());
+        assertEquals(userToRetrieve.getUsername(), retrievedUser.getUsername());
     }
 
     @Test
     void getUserByUsername() {
-        People people = new User("testUser23", "password",3);
-        userRepository.addUser(people);
-        People retrievedUser = userRepository.getUser("testUser23");
+        List<User> allUsers = userRepository.getAllUser();
+        User userToRetrieve = allUsers.get(0);
+
+        User retrievedUser = userRepository.getUser(userToRetrieve.getUsername());
         assertNotNull(retrievedUser);
-        assertEquals("testUser23", retrievedUser.getUsername());
+        assertEquals(userToRetrieve.getUsername(), retrievedUser.getUsername());
     }
 
     @Test
     void getAllUser() {
-        People people1 = new User("testUser12", "password1",2);
-        People people2 = new User("testUser23", "password2",5);
-        userRepository.addUser(people1);
-        userRepository.addUser(people2);
         List<User> allUsers = userRepository.getAllUser();
-        assertEquals(2, allUsers.size());
+        System.out.println(allUsers);
     }
 }

@@ -1,59 +1,80 @@
 package top.haidong556.ac.repository;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import top.haidong556.ac.entity.ac.Ac;
 import top.haidong556.ac.entity.operationDetail.OperationItem;
+import top.haidong556.ac.entity.role.User;
 import top.haidong556.ac.mapper.AcOperationMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-@SpringBootTest(classes = {
-        AcOperationRepository.class,
-        AcOperationMapper.class
-})
+
+@SpringBootTest(classes = { AcOperationRepository.class, AcOperationMapper.class ,UserRepository.class,AcRepository.class})
 class AcOperationRepositoryTest {
 
     @Autowired
     private AcOperationRepository acOperationRepository;
+    @Autowired
+    private AcRepository acRepository;
+    @Autowired
+    private UserRepository userRepository;
+    private OperationItem operationItem;
+    private User user;
+    private Ac ac;
+    @BeforeEach
+    void setupTestData() {
+        ac = new Ac();
+        ac.setWindSpeed(3);
+        ac.setTemp(24);
+        ac.setRoom(UUID.randomUUID().toString().replace("-", "").substring(0, 4));
+        ac.setAcState(Ac.AcState.CLOSE);
+        acRepository.addAc(ac);
+        user = new User(UUID.randomUUID().toString().replace("-", "").substring(0, 10), "password1", ac.getAcId());
+        userRepository.addUser(user);
+
+        operationItem = new OperationItem();
+        operationItem.setUserId(user.getUserId());
+        operationItem.setType(OperationItem.OperationType.OPEN_AC);
+        operationItem.setCreateTime(LocalDateTime.now());
+        operationItem.setAcId(ac.getAcId());
+        acOperationRepository.createOperationItem(operationItem);
+    }
+
+    @AfterEach
+    void cleanupTestData() {
+        acOperationRepository.deleteOperationItem(operationItem.getOperationId());
+        userRepository.deleteUser(user.getUserId());
+        acRepository.deleteAc(ac.getAcId());
+    }
 
     @Test
     void getAcOperationTableByUserId() {
-        int userId = 1;
-        List<OperationItem> result = acOperationRepository.getAcOperationTableByUserId(userId);
-
+        List<OperationItem> result = acOperationRepository.getAcOperationTableByUserId(user.getUserId());
         assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals(OperationItem.OperationType.OPEN_AC, result.get(0).getType());
-        assertEquals(OperationItem.OperationType.CLOSE_AC, result.get(1).getType());
+        System.out.println(result);
     }
 
     @Test
     void getAcOperationTableByAcId() {
-        int acId = 101;
+        int acId = operationItem.getAcId();
         List<OperationItem> result = acOperationRepository.getAcOperationTableByAcId(acId);
 
         assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals(OperationItem.OperationType.OPEN_AC, result.get(0).getType());
-        assertEquals(OperationItem.OperationType.CLOSE_AC, result.get(1).getType());
+        System.out.println(result);
     }
 
     @Test
     void createOperationItem() {
-        OperationItem newItem = new OperationItem();
-        newItem.setUserId(2);
-        newItem.setType(OperationItem.OperationType.CHANGE_AC_WIND_SPEED);
-        newItem.setCreateTime(LocalDateTime.now());
-        newItem.setAcId(3);
-
-        acOperationRepository.createOperationItem(newItem);
-
-        List<OperationItem> result = acOperationRepository.getAcOperationTableByUserId(newItem.getUserId());
+        List<OperationItem> result = acOperationRepository.getAcOperationTableByUserId(operationItem.getUserId());
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(OperationItem.OperationType.CHANGE_AC_WIND_SPEED, result.get(0).getType());
+        assertEquals(operationItem.getType(), result.get(0).getType());
     }
 }

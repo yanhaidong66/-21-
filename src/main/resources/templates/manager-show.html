@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>酒店管理系统</title>
+    <style>
+        html, body {
+            height: 99%;
+            width: 99%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            position: absolute;
+            width: 15%;
+            background-color: #333;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .username {
+            color: white;
+            text-align: center;
+        }
+
+        .sidebar a {
+            padding: 10px 15px;
+            font-size: 18px;
+            color: white;
+            display: block;
+            margin-bottom: 10%; /* 增加导航链接之间的间距 */
+        }
+
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+
+        .logout {
+            background-color: #ff4b4b;
+            text-align: center;
+            margin-bottom: 20px;
+            height: 5%;
+            width: 100%;
+            position: absolute;
+            bottom: 6%;
+        }
+
+        .logout button {
+            padding: 10px 15px;
+            text-decoration: none;
+            width: 100%;
+            height: 100%;
+            color: white;
+            background-color: brown;
+            display: block;
+        }
+
+        .logout a:hover {
+            background-color: black;
+        }
+
+        .content {
+            position: absolute;
+            left: 15%;
+            top:0;
+            width: 85%;
+            height: 100%;
+            overflow: auto; /* 确保内容区域可以滚动 */
+        }
+
+        .active {
+            background-color: #555;
+        }
+
+        .table-container {
+            width: 90%;
+            height: 80%;
+            overflow-y: auto; /* 横向滚动 */
+        }
+
+        table {
+            width: 100%; /* 表格宽度填满父容器 */
+            height: 100%;
+            border-collapse: collapse; /* 边框合并 */
+        }
+
+        tbody {
+            width: 100%;
+        }
+
+        thead {
+            width: 100%;
+        }
+
+        thead th, tbody td {
+            padding: 20px; /* 单元格内边距 */
+            text-align: left;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2; /* 偶数行背景色 */
+        }
+
+        tbody tr:hover {
+            background-color: #ddd; /* 鼠标悬停时的背景色 */
+        }
+
+        th, td {
+            border: 1px solid #ddd; /* 表格边框 */
+            width: 20%;
+        }
+
+        th {
+            position: sticky; /* 表头固定 */
+            top: 0; /* 与顶部对齐 */
+            z-index: 1; /* 确保表头在顶部 */
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            padding: 10px;
+            margin: 5px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .pagination button:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background-color: #575757;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <div class="username">
+        <!-- 使用Thymeleaf填充用户名 -->
+        <p>Manager</p>
+    </div>
+
+    <div class="logout">
+        <button>登出</button>
+    </div>
+</div>
+<div class="content">
+    <section id="all-users">
+        <h2>订单</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>单号</th>
+                    <th>单状态</th>
+                    <th>创建时间</th>
+                    <th>用户ID</th>
+                    <th>空调ID</th>
+                </tr>
+                </thead>
+                <tbody id="order-table-body">
+                <!-- Orders will be populated here dynamically -->
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination">
+            <button id="prev-page" disabled>上一页</button>
+            <span id="page-info">Page 1</span>
+            <button id="next-page">下一页</button>
+        </div>
+    </section>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var logoutButton = document.querySelector('.logout button');
+        var prevPageButton = document.getElementById('prev-page');
+        var nextPageButton = document.getElementById('next-page');
+        var pageInfo = document.getElementById('page-info');
+        var orderTableBody = document.getElementById('order-table-body');
+
+        var currentPage = 1;
+        var pageSize = 10; // Number of items per page
+
+        logoutButton.addEventListener("click", function() {
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/logout';
+            document.body.appendChild(form);
+            form.submit();
+        });
+
+        function loadOrders(page) {
+            fetch(`/orders?page=${page}&size=${pageSize}`)
+                .then(response => response.json())
+                .then(data => {
+                    var orders = data.orders;
+                    var totalPages = data.totalPages;
+                    orderTableBody.innerHTML = '';
+
+                    orders.forEach(order => {
+                        var row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${order.billId}</td>
+                            <td>${order.state}</td>
+                            <td>${order.createTime}</td>
+                            <td>${order.userId}</td>
+                            <td>${order.acId}</td>
+                        `;
+                        orderTableBody.appendChild(row);
+                    });
+
+                    pageInfo.textContent = `Page ${page} of ${totalPages}`;
+                    prevPageButton.disabled = page <= 1;
+                    nextPageButton.disabled = page >= totalPages;
+                });
+        }
+
+        prevPageButton.addEventListener('click', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                loadOrders(currentPage);
+            }
+        });
+
+        nextPageButton.addEventListener('click', function() {
+            currentPage++;
+            loadOrders(currentPage);
+        });
+
+        loadOrders(currentPage);
+    });
+</script>
+</body>
+</html>
+

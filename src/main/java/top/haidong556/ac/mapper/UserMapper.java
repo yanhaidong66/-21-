@@ -15,10 +15,10 @@ public interface UserMapper {
     @Options(useGeneratedKeys = true, keyProperty = "userId")
     void createUser(User user);
 
-    @Delete("DELETE FROM t_user WHERE user_id = #{userId}")
+    @Delete("DELETE FROM t_user WHERE user_id = #{userId} AND user_role='USER'")
     void deleteUser(int userId);
 
-    @Select("SELECT user_id AS userId, user_ac_id AS acId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user WHERE user_id = #{userId}")
+    @Select("SELECT user_id AS userId, user_ac_id AS acId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user WHERE user_id = #{userId} AND user_role = 'USER'")
     @Results({
             @Result(property = "roleType", column = "roleType", javaType = RoleType.class, typeHandler = RoleTypeHandler.class)
     })
@@ -29,7 +29,7 @@ public interface UserMapper {
     })
     User getUserByUsername(String username);
 
-    @Select("SELECT user_id AS userId, user_ac_id AS userAcId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user")
+    @Select("SELECT user_id AS userId, user_ac_id AS userAcId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user WHERE user_role='USER'")
     @Results({
             @Result(property = "roleType", column = "roleType", javaType = RoleType.class, typeHandler = RoleTypeHandler.class)
     })

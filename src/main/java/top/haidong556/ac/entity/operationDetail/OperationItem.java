@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class OperationItem {
     public enum OperationType {
-        OPEN_AC, CLOSE_AC, CHANGE_AC_TEMP, CHANGE_AC_WIND_SPEED;
+         CLOSE_AC,OPEN_AC, CHANGE_AC_TEMP, CHANGE_AC_WIND_SPEED;
     }
 
     int operationId;
@@ -15,6 +15,4 @@ public class OperationItem {
     OperationType type;
     LocalDateTime createTime;
     int acId;
-
-
 }

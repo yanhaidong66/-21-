@@ -11,10 +11,10 @@ public interface AdminMapper {
     @Options(useGeneratedKeys = true, keyProperty = "userId")
     void createAdmin(Admin waiter);
 
-    @Delete("DELETE FROM t_user WHERE user_id = #{userId}")
+    @Delete("DELETE FROM t_user WHERE user_id = #{userId} AND user_role='ADMIN'")
     void deleteAdmin(int userId);
 
-    @Select("SELECT user_id AS userId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user WHERE user_id = #{userId}")
+    @Select("SELECT user_id AS userId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user WHERE user_id = #{userId} AND user_role='ADMIN'")
     @Results({
             @Result(property = "roleType", column = "roleType", javaType = People.RoleType.class, typeHandler = RoleTypeHandler.class)
     })
@@ -25,7 +25,7 @@ public interface AdminMapper {
     })
     Admin getAdminByUsername(String username);
 
-    @Select("SELECT user_id AS userId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user where user_role=1")
+    @Select("SELECT user_id AS userId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user where user_role='ADMIN'")
     @Results({
             @Result(property = "roleType", column = "roleType", javaType = People.RoleType.class, typeHandler = RoleTypeHandler.class)
     })

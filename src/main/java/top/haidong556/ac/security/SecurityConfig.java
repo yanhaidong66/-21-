@@ -41,6 +41,16 @@ public class SecurityConfig {
                     .failureUrl("/login?error=true")
                     .permitAll();
         });
+        http.logout(logout->{
+           logout
+                   .logoutUrl("/logout")
+                   .permitAll()
+                   .logoutSuccessUrl("/login")
+                   .invalidateHttpSession(true)  // 清除session
+                   .deleteCookies("JSESSIONID")  // 清除cookies
+                   .clearAuthentication(true);  // 清除认证信息
+
+        });
 
 
         return http.build();

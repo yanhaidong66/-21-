@@ -77,43 +77,48 @@
             background-color: #555;
         }
 
-
-        .query-container {
-            position: absolute;
-            left: 30%;
-            top: 30%;
-            padding: 20px;
-            margin: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            width: 300px;
+        .table-container {
+            width: 90%;
+            height: 100%;
+            overflow-y: auto; /* 横向滚动 */
         }
 
-        .query-container label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
+        table {
+            width: 100%; /* 表格宽度填满父容器 */
+            height: 100%;
+            border-collapse: collapse; /* 边框合并 */
         }
 
-        .query-container input[type="date"] {
+        tbody {
             width: 100%;
-            padding: 5px;
-            margin-bottom: 20px;
-            box-sizing: border-box;
         }
 
-        .query-container button {
+        thead {
             width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
         }
 
-        .query-container button:hover {
-            background-color: #45a049;
+        thead th, tbody td {
+            padding: 20px; /* 单元格内边距 */
+            text-align: left;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2; /* 偶数行背景色 */
+        }
+
+        tbody tr:hover {
+            background-color: #ddd; /* 鼠标悬停时的背景色 */
+        }
+
+        th, td {
+            border: 1px solid #ddd; /* 表格边框 */
+            width: 33.33%;
+        }
+
+        th {
+            position: sticky; /* 表头固定 */
+            top: 0; /* 与顶部对齐 */
+            z-index: 1; /* 确保表头在顶部 */
         }
     </style>
 </head>
@@ -121,25 +126,39 @@
 <div class="sidebar">
     <div class="username">
         <!-- 使用Thymeleaf填充用户名 -->
-        <p >Manager</p>
+        <p th:text="${waiter.username}">用户名</p>
     </div>
-
+    <div class="nav-links">
+        <a  th:href="@{/waiter/checkin}" >入住</a>
+        <a  th:href="@{/waiter/checkout}" >结账</a>
+        <a  th:href="@{/waiter/allUser}" class="active">查看所有入住用户</a>
+    </div>
     <div class="logout">
         <button >登出</button>
     </div>
 </div>
 <div class="content">
-    <div class="query-container">
-        <form method="GET" action="/manager/show">
-            <label for="start-date">开始时间:</label>
-            <input type="date" id="start-date" name="startDate" required>
-
-            <label for="end-date">结束时间:</label>
-            <input type="date" id="end-date" name="endDate" required>
-
-            <button type="submit">查询</button>
-        </form>
-    </div>
+    <section id="all-users">
+        <h2>所有入住用户</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th >用户名</th>
+                    <th >空调号</th>
+                    <th >用户ID</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${allUser}">
+                    <td th:text="${user.username}">用户名</td>
+                    <td th:text="${user.acId}">空调号</td>
+                    <td th:text="${user.userId}">用户ID</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
 </div>
 </body>
 <script>

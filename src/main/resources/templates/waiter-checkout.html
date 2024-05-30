@@ -76,70 +76,37 @@
         .active {
             background-color: #555;
         }
-
-
-        .query-container {
-            position: absolute;
-            left: 30%;
-            top: 30%;
-            padding: 20px;
-            margin: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            width: 300px;
-        }
-
-        .query-container label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .query-container input[type="date"] {
-            width: 100%;
-            padding: 5px;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-        }
-
-        .query-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .query-container button:hover {
-            background-color: #45a049;
-        }
     </style>
 </head>
 <body>
 <div class="sidebar">
     <div class="username">
         <!-- 使用Thymeleaf填充用户名 -->
-        <p >Manager</p>
+        <p th:text="${waiter.username}">用户名</p>
     </div>
-
+    <div class="nav-links">
+        <a  th:href="@{/waiter/checkin}" >入住</a>
+        <a  th:href="@{/waiter/checkout}" class="active">结账</a>
+        <a  th:href="@{/waiter/allUser}">查看所有入住用户</a>
+    </div>
     <div class="logout">
         <button >登出</button>
     </div>
 </div>
 <div class="content">
-    <div class="query-container">
-        <form method="GET" action="/manager/show">
-            <label for="start-date">开始时间:</label>
-            <input type="date" id="start-date" name="startDate" required>
-
-            <label for="end-date">结束时间:</label>
-            <input type="date" id="end-date" name="endDate" required>
-
-            <button type="submit">查询</button>
-        </form>
-    </div>
+    <h1>欢迎来到酒店管理系统</h1>
+    <section id="checkin">
+        <h2>入住</h2>
+        <p>在此处处理入住手续。</p>
+    </section>
+    <section id="checkout">
+        <h2>结账</h2>
+        <p>在此处处理结账手续。</p>
+    </section>
+    <section id="view-rooms">
+        <h2>查看房间信息</h2>
+        <p>在此处查看房间的详细信息。</p>
+    </section>
 </div>
 </body>
 <script>

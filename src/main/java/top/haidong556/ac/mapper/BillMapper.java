@@ -11,9 +11,9 @@ import java.util.List;
 @Mapper
 public interface BillMapper {
 
-    @Select("SELECT bill_id AS billId, bill_state AS state, bill_create_time AS datetime, bill_user_id AS userId, bill_ac_id AS acId FROM t_bill WHERE bill_create_time BETWEEN #{createTime} AND #{endTime}")
+    @Select("SELECT bill_id AS billId, bill_state AS state, bill_create_time AS createTime, bill_user_id AS userId, bill_ac_id AS acId FROM t_bill WHERE bill_create_time BETWEEN #{createTime} AND #{endTime}")
     @Results({
-            @Result(property = "state", column = "bill_state", javaType = BillState.class, typeHandler = BillStateHandler.class)
+            @Result(property = "state", column = "state", javaType = BillState.class, typeHandler = BillStateHandler.class)
     })
     List<BillItem> getBillItemByTime(@Param("createTime") LocalDateTime createTime, @Param("endTime") LocalDateTime endTime);
 
