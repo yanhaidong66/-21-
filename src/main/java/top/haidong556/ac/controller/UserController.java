@@ -1,5 +1,6 @@
 package top.haidong556.ac.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,6 +16,7 @@ public class UserController {
 
     private AcService acService;
     private MyUserDetailsServiceImpl userDetailsService;
+
     @Autowired
     public UserController(AcService acService,MyUserDetailsServiceImpl userDetailsService){
         this.userDetailsService=userDetailsService;
@@ -24,39 +26,50 @@ public class UserController {
     public ModelAndView getUserPage(){
         User user = userDetailsService.currentUser();
         int acId = user.getAcId();
-        acService.openAc(acId);
         Ac acState = acService.getAcState(acId);
         ModelAndView modelAndView=new ModelAndView("user");
         modelAndView.addObject("acState",acState);
         modelAndView.addObject("user",user);
+        System.out.println(acState);
         return modelAndView;
     }
-    @PatchMapping("/temp")
-    public ModelAndView changeAcTemp(int newTemp){
+    @GetMapping("/temp")
+    public ModelAndView changeAcTemp( int newTemp){
         User user = userDetailsService.currentUser();
         int acId = user.getAcId();
-        acService.changeAcTemp(acId,newTemp);
+        acService.changeAcTemp(acId,newTemp,userDetailsService.currentUser().getUserId());
         Ac acState = acService.getAcState(acId);
         ModelAndView modelAndView=new ModelAndView("user");
         modelAndView.addObject("acState",acState);
         return modelAndView;
     }
 
-    @PatchMapping("/windSpeed")
-    public ModelAndView changeAcWindSpeed(int newWindSpeed){
+    @GetMapping("/windSpeed")
+    public ModelAndView changeAcWindSpeed( int newWindSpeed){
+        int windSpeed=Integer.valueOf(newWindSpeed);
         User user = userDetailsService.currentUser();
         int acId = user.getAcId();
-        acService.changeAcWindSpeed(acId,newWindSpeed);
+        acService.changeAcWindSpeed(acId,windSpeed,userDetailsService.currentUser().getUserId());
         Ac acState = acService.getAcState(acId);
         ModelAndView modelAndView=new ModelAndView("user");
         modelAndView.addObject("acState",acState);
         return modelAndView;
     }
     @GetMapping("/close")
-    public ModelAndView closeAc(){
+    public ModelAndView close(){
         User user = userDetailsService.currentUser();
         int acId = user.getAcId();
-        acService.closeAc(acId);
+        acService.closeAc(acId,userDetailsService.currentUser().getUserId());
+        Ac acState = acService.getAcState(acId);
+        ModelAndView modelAndView=new ModelAndView("user");
+        modelAndView.addObject("acState",acState);
+        return modelAndView;
+    }
+    @GetMapping("/open")
+    public ModelAndView open(){
+        User user = userDetailsService.currentUser();
+        int acId = user.getAcId();
+        acService.openAc(acId,userDetailsService.currentUser().getUserId());
         Ac acState = acService.getAcState(acId);
         ModelAndView modelAndView=new ModelAndView("user");
         modelAndView.addObject("acState",acState);

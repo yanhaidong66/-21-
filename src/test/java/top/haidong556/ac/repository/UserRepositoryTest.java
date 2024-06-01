@@ -37,7 +37,6 @@ class UserRepositoryTest {
         ac.setWindSpeed(3);
         ac.setTemp(24);
         ac.setRoom("2342322");
-        ac.setCostPerHour(10);
         ac.setAcState(Ac.AcState.CLOSE);
         acRepository.addAc(ac);
         user1 = new User("testUser918", "password1", ac.getAcId());

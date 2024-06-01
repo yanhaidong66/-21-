@@ -11,11 +11,11 @@ public interface AcMapper {
     @Insert("INSERT INTO t_ac (ac_room, ac_state, ac_wind_speed, ac_temp) VALUES (#{room}, #{acState}, #{windSpeed}, #{temp})")
     @Options(useGeneratedKeys = true, keyProperty = "acId")
     void addAc(Ac ac);
-    @Select("SELECT ac_state AS acState, ac_id AS acId, ac_wind_speed AS windSpeed, ac_temp AS temp, ac_room AS room  FROM t_ac WHERE ac_id = #{acId}")
+    @Select("SELECT ac_room_temp AS roomTemp,ac_state AS acState, ac_id AS acId, ac_wind_speed AS windSpeed, ac_temp AS temp, ac_room AS room  FROM t_ac WHERE ac_id = #{acId}")
     Ac getAcStateById(int acId);
-    @Select("SELECT ac_state AS acState, ac_id AS acId, ac_wind_speed AS windSpeed, ac_temp AS temp, ac_room AS room FROM t_ac WHERE ac_room = #{acRoom}")
+    @Select("SELECT ac_room_temp AS roomTemp,ac_state AS acState, ac_id AS acId, ac_wind_speed AS windSpeed, ac_temp AS temp, ac_room AS room FROM t_ac WHERE ac_room = #{acRoom}")
     Ac getAcStateByRoom(String acRoom);
-    @Select("SELECT ac_state AS acState, ac_id AS acId, ac_wind_speed AS windSpeed, ac_temp AS temp, ac_room AS room FROM t_ac ")
+    @Select("SELECT ac_room_temp AS roomTemp,ac_state AS acState, ac_id AS acId, ac_wind_speed AS windSpeed, ac_temp AS temp, ac_room AS room FROM t_ac ")
     List<Ac> getAllAcState();
 
     @Update("UPDATE t_ac SET ac_state = 0 WHERE ac_id = #{acId}")
@@ -34,6 +34,11 @@ public interface AcMapper {
     void deleteAcById(@Param("acId")int acId);
     @Delete("DELETE FROM t_ac WHERE ac_room=#{acRoom}")
     void deleteAcByRoom(@Param("acRoom")String acRoom);
+    @Select("SELECT ac_room_temp as roomTemp from t_ac where ac_id = #{acId}")
+    int getRoomTemp(int acId);
+    @Update("UPDATE t_ac SET ac_room_temp = #{roomTemp} WHERE ac_id = #{acId}")
+    void changeRoomTemp(@Param("roomTemp")float roomTemp,@Param("acId")int acId);
+
 }
 
 

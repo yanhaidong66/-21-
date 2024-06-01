@@ -61,53 +61,76 @@
         <p><strong>用户名:</strong> <span th:text="${user?.username} ?: 'error'"></span></p>
         <p><strong>空调ID:</strong> <span th:text="${acState?.acId} ?: 'error'"></span></p>
         <p><strong>房间:</strong> <span th:text="${acState?.room} ?: 'error'"></span></p>
-        <p><strong>室温:</strong> <span th:text="${acState?.nowRoomTemp} ?: 'error'"></span>
-        <p><strong>每分钟费用:</strong> <span th:text="${acState?.costPerHour} ?: 'error'"></span></p>
+        <p><strong>室温:</strong> <span th:text="${acState?.roomTemp} ?: 'error'"></span>
         <p><strong>空调状态:</strong> <span th:text="${acState?.acState} ?: 'error'"></span>
-            <input type="number" id="acStateInput">
-            <button onclick="updateField('acState')">修改</button>
+            <select id="acStateInput">
+                <option value="open">打开</option>
+                <option value="close">关闭</option>
+            </select>
+            <button onclick="changeAcState()">修改</button>
         </p>
         <p><strong>风速:</strong> <span th:text="${acState?.windSpeed} ?: 'error'"></span>
             <input type="number" id="windSpeedInput">
-            <button onclick="updateField('windSpeed')">修改</button>
+            <button onclick="changeAcWindSpeed()">修改</button>
         </p>
         <p><strong>温度:</strong> <span th:text="${acState?.temp} ?: 'error'"></span>
             <input type="number" id="tempInput">
-            <button onclick="updateField('temp')">修改</button>
+            <button onclick="changeAcTemp()">修改</button>
         </p>
     </div>
     <button class="logout">登出</button>
     <script>
-        function updateField(field) {
-            const input = document.getElementById(field + 'Input');
-            const value = input.value;
-            if (value === '') {
-                alert('请输入一个数字值');
-                return;
-            }
-            const data = {};
-            data[field] = value;
-
-            fetch('/api/updateAcState', {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('更新成功');
-                        location.reload(); // 更新页面以反映新的状态
-                    } else {
-                        alert('更新失败: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    alert('请求失败: ' + error);
-                });
+        function changeAcTemp() {
+            var temp = document.getElementById("tempInput").value;
+            fetch(`/user/temp?newTemp=${temp}`, {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Failed to change AC temperature');
+            }).then(data => {
+                // Handle response data as needed
+            }).catch(error => {
+                console.error('Error:', error);
+            });
         }
+
+        function changeAcWindSpeed() {
+            var windSpeed = document.getElementById("windSpeedInput").value;
+            windSpeed = parseInt(windSpeed);
+            fetch(`/user/windSpeed?newWindSpeed=${windSpeed}`, {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Failed to change AC wind speed');
+            }).then(data => {
+                // Handle response data as needed
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function changeAcState() {
+            var state = document.getElementById("acStateInput").value;
+            var endpoint = state === 'open' ? '/user/open' : '/user/close';
+            fetch(endpoint, {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Failed to change AC state');
+            }).then(data => {
+                // Handle response data as needed
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+
         document.addEventListener("DOMContentLoaded", function() {
             // 获取登出按钮
             var logoutButton = document.querySelector('.logout');

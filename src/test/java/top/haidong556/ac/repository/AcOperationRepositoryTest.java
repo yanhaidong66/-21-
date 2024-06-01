@@ -39,11 +39,12 @@ class AcOperationRepositoryTest {
         user = new User(UUID.randomUUID().toString().replace("-", "").substring(0, 10), "password1", ac.getAcId());
         userRepository.addUser(user);
 
-        operationItem = new OperationItem();
-        operationItem.setUserId(user.getUserId());
-        operationItem.setType(OperationItem.OperationType.OPEN_AC);
-        operationItem.setCreateTime(LocalDateTime.now());
-        operationItem.setAcId(ac.getAcId());
+        OperationItem operationItem = new OperationItem.Builder()
+                .setUserId(user.getUserId())
+                .setType(OperationItem.OperationType.OPEN_AC)
+                .setCreateTime(LocalDateTime.now())
+                .setAcId(ac.getAcId())
+                .build();
         acOperationRepository.createOperationItem(operationItem);
     }
 

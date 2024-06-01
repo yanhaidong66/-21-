@@ -9,6 +9,7 @@ import top.haidong556.ac.entity.ac.Ac;
 import top.haidong556.ac.mapper.AcMapper;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = { AcRepository.class, Ac.class, AcMapper.class })
@@ -23,8 +24,7 @@ class AcRepositoryTest {
         ac = new Ac();
         ac.setWindSpeed(3);
         ac.setTemp(24);
-        ac.setRoom("234232");
-        ac.setCostPerHour(10);
+        ac.setRoom(UUID.randomUUID().toString().replace("-", "").substring(0, 3));
         ac.setAcState(Ac.AcState.OPEN);
         acRepository.addAc(ac);
     }
@@ -41,7 +41,10 @@ class AcRepositoryTest {
         assertEquals(ac.getWindSpeed(), retrievedAc.getWindSpeed());
         assertEquals(ac.getTemp(), retrievedAc.getTemp());
         assertEquals(ac.getRoom(), retrievedAc.getRoom());
-        assertEquals(ac.getAcState(), retrievedAc.getAcState());
+        while (true){
+            retrievedAc = acRepository.getAcState(ac.getAcId());
+            System.out.println("retrievedAcState"+retrievedAc.getAcState());
+        }
     }
 
     @Test

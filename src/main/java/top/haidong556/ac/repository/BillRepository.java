@@ -13,10 +13,10 @@ import java.util.List;
 public class BillRepository {
 
     // Get bill items within a specific time range
-    public List<BillItem> getBillItemByTime(LocalDateTime createTime, LocalDateTime endTime) {
+    public List<BillItem> getBillItemByTime(LocalDateTime startTime, LocalDateTime endTime) {
         try (SqlSession session = MysqlFactory.getSession()) {
             BillMapper mapper = session.getMapper(BillMapper.class);
-            return mapper.getBillItemByTime(createTime, endTime);
+            return mapper.getBillItemByTime(startTime, endTime);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to retrieve bill items", e);

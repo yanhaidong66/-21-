@@ -40,6 +40,15 @@ public class AcRepository {
             throw new RuntimeException("Failed to get AC state", e);
         }
     }
+    public int getRoomTemp(int acId) {
+        try (SqlSession session = MysqlFactory.getSession()) {
+            AcMapper mapper = session.getMapper(AcMapper.class);
+            return mapper.getRoomTemp(acId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to get AC roomTemp", e);
+        }
+    }
     public List<Ac> getAllAcState() {
         try (SqlSession session = MysqlFactory.getSession()) {
             AcMapper mapper = session.getMapper(AcMapper.class);
@@ -91,6 +100,16 @@ public class AcRepository {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to change AC temperature", e);
+        }
+    }
+    public void changeRoomTemp(int acId, float newTemp) {
+        try (SqlSession session = MysqlFactory.getSession()) {
+            AcMapper mapper = session.getMapper(AcMapper.class);
+            mapper.changeRoomTemp( newTemp,acId);
+            session.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to change room temperature", e);
         }
     }
     public void deleteAc(int acId){

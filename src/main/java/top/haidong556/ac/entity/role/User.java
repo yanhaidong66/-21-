@@ -3,6 +3,7 @@ package top.haidong556.ac.entity.role;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import top.haidong556.ac.util.GlobalConfig;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,5 +36,8 @@ public class User extends People {
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         return authorities;
     }
+
+
+
 
 }

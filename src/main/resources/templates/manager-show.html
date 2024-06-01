@@ -170,77 +170,46 @@
                     <th>空调ID</th>
                 </tr>
                 </thead>
-                <tbody id="order-table-body">
-                <!-- Orders will be populated here dynamically -->
+                <tbody>
+                <tr th:each="bill : ${billItems}">
+                    <td th:text="${bill.billId}">单号</td>
+                    <td th:text="${bill.state}">单状态</td>
+                    <td th:text="${bill.createTime}">创建时间</td>
+                    <td th:text="${bill.userId}">用户ID</td>
+                    <td th:text="${bill.acId}">空调ID</td>
+                </tr>
                 </tbody>
             </table>
         </div>
-        <div class="pagination">
-            <button id="prev-page" disabled>上一页</button>
-            <span id="page-info">Page 1</span>
-            <button id="next-page">下一页</button>
-        </div>
+<!--        <div class="pagination">-->
+<!--            <button id="prev-page" disabled>上一页</button>-->
+<!--            <span id="page-info">Page 1</span>-->
+<!--            <button id="next-page">下一页</button>-->
+<!--        </div>-->
     </section>
 </div>
 <script>
+
+
     document.addEventListener("DOMContentLoaded", function() {
-        var logoutButton = document.querySelector('.logout button');
-        var prevPageButton = document.getElementById('prev-page');
-        var nextPageButton = document.getElementById('next-page');
-        var pageInfo = document.getElementById('page-info');
-        var orderTableBody = document.getElementById('order-table-body');
+        // 获取登出按钮
+        var logoutButton = document.querySelector('.logout');
 
-        var currentPage = 1;
-        var pageSize = 10; // Number of items per page
-
-        logoutButton.addEventListener("click", function() {
+        // 给登出按钮添加点击事件监听器
+        logoutButton.addEventListener("click", function(event) {
+            // 创建一个新的POST表单
             var form = document.createElement('form');
             form.method = 'POST';
-            form.action = '/logout';
+            form.action = '/logout'; // 登出URL
+
+            // 将表单添加到页面中
             document.body.appendChild(form);
+
+            // 提交表单
             form.submit();
         });
-
-        function loadOrders(page) {
-            fetch(`/orders?page=${page}&size=${pageSize}`)
-                .then(response => response.json())
-                .then(data => {
-                    var orders = data.orders;
-                    var totalPages = data.totalPages;
-                    orderTableBody.innerHTML = '';
-
-                    orders.forEach(order => {
-                        var row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${order.billId}</td>
-                            <td>${order.state}</td>
-                            <td>${order.createTime}</td>
-                            <td>${order.userId}</td>
-                            <td>${order.acId}</td>
-                        `;
-                        orderTableBody.appendChild(row);
-                    });
-
-                    pageInfo.textContent = `Page ${page} of ${totalPages}`;
-                    prevPageButton.disabled = page <= 1;
-                    nextPageButton.disabled = page >= totalPages;
-                });
-        }
-
-        prevPageButton.addEventListener('click', function() {
-            if (currentPage > 1) {
-                currentPage--;
-                loadOrders(currentPage);
-            }
-        });
-
-        nextPageButton.addEventListener('click', function() {
-            currentPage++;
-            loadOrders(currentPage);
-        });
-
-        loadOrders(currentPage);
     });
+
 </script>
 </body>
 </html>

@@ -45,11 +45,12 @@ class BillRepositoryTest {
         user = new User(UUID.randomUUID().toString().replace("-", "").substring(0, 10), "password1", ac.getAcId());
         userRepository.addUser(user);
 
-        billItem = new BillItem();
-        billItem.setState(BillItem.BillState.NOT_PAY);
-        billItem.setCreateTime(LocalDateTime.now());
-        billItem.setUserId(user.getUserId());
-        billItem.setAcId(ac.getAcId());
+        billItem = new BillItem.Builder()
+                .setState(BillItem.BillState.NOT_PAY)
+                .setCreateTime(LocalDateTime.now())
+                .setUserId(user.getUserId())
+                .setAcId(ac.getAcId())
+                .build();
 
         billRepository.createBillItem(billItem);
     }
@@ -63,7 +64,7 @@ class BillRepositoryTest {
 
     @Test
     void getBillItemByTime() {
-        LocalDateTime startTime = LocalDateTime.now().minusDays(1);
+        LocalDateTime startTime = LocalDateTime.now().minusDays(3);
         LocalDateTime endTime = LocalDateTime.now();
 
         List<BillItem> billItems = billRepository.getBillItemByTime(startTime, endTime);
@@ -88,4 +89,6 @@ class BillRepositoryTest {
 
         assertTrue(billItems.isEmpty());
     }
+
+
 }

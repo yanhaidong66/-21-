@@ -13,44 +13,72 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.haidong556.ac.security.MyUserDetailsServiceImpl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class AcService {
     private final AcRepository acRepository;
     private final AcOperationRepository acOperationRepository;
-    private MyUserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    public AcService(AcRepository acRepository, AcOperationRepository acOperationRepository,MyUserDetailsServiceImpl userDetailsService) {
+    public AcService(AcRepository acRepository, AcOperationRepository acOperationRepository) {
         this.acRepository = acRepository;
         this.acOperationRepository = acOperationRepository;
-        this.userDetailsService=userDetailsService;
     }
 
     public void addAc(Ac ac) {
         acRepository.addAc(ac);
         System.out.println("添加空调设备："+ac);
+
     }
 
-    public void changeAcTemp(int acId, int newTemp) {
+    public void changeAcTemp(int acId, int newTemp,int userId) {
         acRepository.changeAcTemp(acId, newTemp);
         System.out.println("修改空调id="+acId+"温度为"+newTemp);
+        OperationItem operationItem=new OperationItem.Builder()
+                .setAcId(acId)
+                .setType(OperationItem.OperationType.CHANGE_AC_TEMP)
+                .setUserId(userId)
+                .setCreateTime(LocalDateTime.now())
+                .build();
+        acOperationRepository.createOperationItem(operationItem);
     }
 
-    public void changeAcWindSpeed(int acId, int newWindSpeed) {
+    public void changeAcWindSpeed(int acId, int newWindSpeed,int userId) {
         acRepository.changeAcWindSpeed(acId, newWindSpeed);
+        OperationItem operationItem=new OperationItem.Builder()
+                .setAcId(acId)
+                .setType(OperationItem.OperationType.CHANGE_AC_WIND_SPEED)
+                .setUserId(userId)
+                .setCreateTime(LocalDateTime.now())
+                .build();
+        acOperationRepository.createOperationItem(operationItem);
         System.out.println("修改空调"+acId+"风速为："+newWindSpeed);
     }
 
-    public void closeAc(int acId) {
+    public void closeAc(int acId,int userId) {
         acRepository.closeAc(acId);
+        OperationItem operationItem=new OperationItem.Builder()
+                .setAcId(acId)
+                .setType(OperationItem.OperationType.CLOSE_AC)
+                .setUserId(userId)
+                .setCreateTime(LocalDateTime.now())
+                .build();
+        acOperationRepository.createOperationItem(operationItem);
         System.out.println("关闭空调"+acId);
 
     }
 
-    public void openAc(int acId) {
+    public void openAc(int acId,int userId) {
         acRepository.openAc(acId);
+        OperationItem operationItem=new OperationItem.Builder()
+                .setAcId(acId)
+                .setType(OperationItem.OperationType.OPEN_AC)
+                .setUserId(userId)
+                .setCreateTime(LocalDateTime.now())
+                .build();
+        acOperationRepository.createOperationItem(operationItem);
         System.out.println("打开空调"+acId);
     }
 
@@ -61,7 +89,6 @@ public class AcService {
 
     public List<OperationItem> getAcDetailTableByAcId(int acId) {
         List<OperationItem> acOperationTableByAcId = acOperationRepository.getAcOperationTableByAcId(acId);
-
         return acOperationTableByAcId;
     }
 
@@ -75,6 +102,12 @@ public class AcService {
     public void createOperationItem(OperationItem operationItem){
         acOperationRepository.createOperationItem(operationItem);
     }
+    public void deleteAc(int acId){
+        acRepository.deleteAc(acId);
+    }
+    public int getRoomTemp(int acId){ return acRepository.getRoomTemp(acId);}
+    public void changeRoomTemp(int acId,float newTemp){ acRepository.changeRoomTemp(acId,newTemp);
+      }
 
 
 }

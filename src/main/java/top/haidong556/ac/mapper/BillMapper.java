@@ -11,13 +11,13 @@ import java.util.List;
 @Mapper
 public interface BillMapper {
 
-    @Select("SELECT bill_id AS billId, bill_state AS state, bill_create_time AS createTime, bill_user_id AS userId, bill_ac_id AS acId FROM t_bill WHERE bill_create_time BETWEEN #{createTime} AND #{endTime}")
+    @Select("SELECT bill_id AS billId,bill_cost AS cost, bill_state AS state, bill_create_time AS createTime, bill_user_id AS userId, bill_ac_id AS acId FROM t_bill WHERE bill_create_time BETWEEN #{startTime} AND #{endTime}")
     @Results({
             @Result(property = "state", column = "state", javaType = BillState.class, typeHandler = BillStateHandler.class)
     })
-    List<BillItem> getBillItemByTime(@Param("createTime") LocalDateTime createTime, @Param("endTime") LocalDateTime endTime);
+    List<BillItem> getBillItemByTime(@Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
 
-    @Insert("INSERT INTO t_bill (bill_state, bill_create_time, bill_user_id, bill_ac_id) VALUES (#{state}, #{createTime}, #{userId}, #{acId})")
+    @Insert("INSERT INTO t_bill (bill_state,bill_cost, bill_create_time, bill_user_id, bill_ac_id) VALUES (#{state},#{cost}, #{createTime}, #{userId}, #{acId})")
     @Options(useGeneratedKeys = true, keyProperty = "billId")
     void createBillItem(BillItem billItem);
 

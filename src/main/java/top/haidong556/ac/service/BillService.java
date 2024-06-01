@@ -16,11 +16,8 @@ public class BillService {
     public BillService(BillRepository billRepository){
         this.billRepository=billRepository;
     }
-
-
-    public List<BillItem> getBillItemByTime(LocalDateTime createTime, LocalDateTime endTime) {
-        List<BillItem> billItemByTime = billRepository.getBillItemByTime(createTime, endTime);
-
+    public List<BillItem> getBillItemByTime(LocalDateTime startTime, LocalDateTime endTime) {
+        List<BillItem> billItemByTime = billRepository.getBillItemByTime(startTime, endTime);
         return billItemByTime;
     }
 

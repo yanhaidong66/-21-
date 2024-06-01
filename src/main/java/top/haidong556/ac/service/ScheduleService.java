@@ -9,11 +9,9 @@ public abstract class ScheduleService implements Runnable {
     public ScheduleService(AcService acService){
         this.acService=acService;
     }
-    public abstract void changeAcTemp(int acId, int newTemp);
-
-    public abstract void changeAcWindSpeed(int acId, int newWindSpeed);
-
-    public abstract void closeAc(int acId);
-
-    public abstract void openAc(int acId);
+    public abstract void changeAcTemp(int acId, int newTemp,int userId);
+    public abstract void changeAcWindSpeed(int acId, int newWindSpeed,int userId);
+    public abstract void closeAc(int acId,int userId);
+    public abstract void openAc(int acId,int userId);
+    //可能添加mod，加热或者制冷
 }

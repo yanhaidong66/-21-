@@ -1,57 +1,64 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>查询功能</title>
-    <style>
-        .query-container {
-            padding: 20px;
-            margin: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            width: 300px;
-        }
-
-        .query-container label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .query-container input[type="date"] {
-            width: 100%;
-            padding: 5px;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-        }
-
-        .query-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .query-container button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <title>Change AC Properties</title>
 </head>
 <body>
-<div class="query-container">
-    <form method="GET" action="/query">
-        <label for="start-date">开始时间:</label>
-        <input type="date" id="start-date" name="startDate" required>
+<button onclick="openChangeAcWindow()">修改空调状态</button>
 
-        <label for="end-date">结束时间:</label>
-        <input type="date" id="end-date" name="endDate" required>
+<script>
+    function openChangeAcWindow() {
+        const acId = 123; // Replace with actual AC ID
+        const newWindow = window.open("", "_blank", "width=600,height=400");
+        const newWindowContent = `
+    <h2>Change AC Properties</h2>
+    <label for="acId">AC ID:</label>
+    <input type="number" id="acId"><br><br>
 
-        <button type="submit">查询</button>
-    </form>
-</div>
+    <label for="acStatus">AC Status:</label>
+    <select id="acStatus">
+        <option value="open">Open</option>
+        <option value="close">Close</option>
+    </select>   <button onclick="updateAcStatus()">Update ac Status</button><br><br>
+
+    <label for="newTemp">New Temperature:</label>
+    <input type="number" id="newTemp" value="25">   <button onclick="updateAcTemp()">Update ac temp</button><br><br>
+
+    <label for="newWindSpeed">New Wind Speed:</label>
+    <input type="number" id="newWindSpeed" value="2">  <button onclick="updateAcWindSpeed()">Update ac windSpeed</button><br><br>
+
+
+`;
+        newWindow.document.body.innerHTML = newWindowContent;
+    }
+
+    function updateAcStatus(){
+        var acId = document.getElementById("acId").value;
+        var acStatus = document.getElementById("acStatus").value;
+        if(acStatus === "open"){
+            fetch(`/admin/open?acId=${acId}`).then(() => console.log("Change status successful")).catch(res => console.error(res));
+        } else {
+            fetch(`/admin/close?acId=${acId}`).then(() => console.log("Change status successful")).catch(res => console.error(res));
+        }
+    }
+    function updateAcTemp() {
+        var newTemp = document.getElementById("newTemp").value;
+        var acId = document.getElementById("acId").value;
+        fetch(`/admin/temp?acId=${acId}&newTemp=${newTemp}`)
+            .then(() => console.log("Update Temperature successful"))
+            .catch(err => console.error(err));
+    }
+
+    function updateAcWindSpeed() {
+        var newWindSpeed = document.getElementById("newWindSpeed").value;
+        var acId = document.getElementById("acId").value;
+        fetch(`/admin/windSpeed?acId=${acId}&newWindSpeed=${newWindSpeed}`)
+            .then(() => console.log("Update Wind Speed successful"))
+            .catch(err => console.error(err));
+    }
+</script>
 </body>
 </html>

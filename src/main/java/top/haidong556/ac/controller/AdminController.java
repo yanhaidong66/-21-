@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import top.haidong556.ac.entity.ac.Ac;
 import top.haidong556.ac.service.AcService;
+import top.haidong556.ac.util.GlobalConfig;
 
 import java.util.List;
 
@@ -19,32 +20,34 @@ public class AdminController {
         this.acService=acService;
     }
 
-    @GetMapping("/all")
+    @GetMapping()
     public ModelAndView getAllAcState(){
         ModelAndView modelAndView=new ModelAndView("admin");
         List<Ac> allAcState = acService.getAllAcState();
         modelAndView.addObject("allAc",allAcState);
         return modelAndView;
     }
-    @PostMapping()
-    public ModelAndView addAc(Ac newAc){
-        acService.addAc(newAc);
+    @GetMapping("/addAc")
+    public ModelAndView addAc(String room){
+        Ac ac=new Ac();
+        ac.setRoom(room);
+        acService.addAc(ac);
         ModelAndView modelAndView=new ModelAndView("admin");
         List<Ac> allAcState = acService.getAllAcState();
         modelAndView.addObject("allAc",allAcState);
         return modelAndView;
     }
-    @PatchMapping("/temp")
+    @GetMapping("/temp")
     public ModelAndView changeAcTemp(int acId, int newTemp){
         ModelAndView modelAndView=new ModelAndView();
         modelAndView.setViewName("login");
-        acService.changeAcTemp(acId,newTemp);
+        acService.changeAcTemp(acId,newTemp, GlobalConfig.ADMIN_ID);
         return modelAndView;
     }
 
-    @PatchMapping("/windSpeed")
+    @GetMapping("/windSpeed")
     public ModelAndView changeAcWindSpeed(int acId,int newWindSpeed){
-        acService.changeAcWindSpeed(acId,newWindSpeed);
+        acService.changeAcWindSpeed(acId,newWindSpeed, GlobalConfig.ADMIN_ID);
         ModelAndView modelAndView=new ModelAndView("admin");
         List<Ac> allAcState = acService.getAllAcState();
         modelAndView.addObject("allAc",allAcState);
@@ -52,7 +55,7 @@ public class AdminController {
     }
     @GetMapping("/close")
     public ModelAndView closeAc(int acId){
-        acService.closeAc(acId);
+        acService.closeAc(acId, GlobalConfig.ADMIN_ID);
         ModelAndView modelAndView=new ModelAndView("admin");
         List<Ac> allAcState = acService.getAllAcState();
         modelAndView.addObject("allAc",allAcState);
@@ -60,7 +63,7 @@ public class AdminController {
     }
     @GetMapping("/open")
     public ModelAndView openAc(int acId){
-        acService.openAc(acId);
+        acService.openAc(acId, GlobalConfig.ADMIN_ID);
         ModelAndView modelAndView=new ModelAndView("admin");
         List<Ac> allAcState = acService.getAllAcState();
         modelAndView.addObject("allAc",allAcState);
