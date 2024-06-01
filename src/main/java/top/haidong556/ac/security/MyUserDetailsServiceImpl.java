@@ -42,17 +42,37 @@ public class MyUserDetailsServiceImpl implements UserDetailsService,UserDetailsP
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.getUser(username);
+    public UserDetails loadUserByUsername(String username) {
+        User user = null;
+        try {
+            user = userService.getUser(username);
+        } catch (Exception e) {
+
+        }
         if(user!=null)
             return new UserDetailsAdapter(user);
-        Manager manager=userService.getManager(username);
+        Manager manager= null;
+        try {
+            manager = userService.getManager(username);
+        } catch (Exception e) {
+
+        }
         if(manager!=null)
             return new UserDetailsAdapter(manager);
-        Waiter waiter=userService.getWaiter(username);
+        Waiter waiter= null;
+        try {
+            waiter = userService.getWaiter(username);
+        } catch (Exception e) {
+
+        }
         if(waiter!=null)
             return new UserDetailsAdapter(waiter);
-        Admin admin=userService.getAdmin(username);
+        Admin admin= null;
+        try {
+            admin = userService.getAdmin(username);
+        } catch (Exception e) {
+
+        }
         if(admin!=null)
             return new UserDetailsAdapter(admin);
         throw new UsernameNotFoundException("not found");

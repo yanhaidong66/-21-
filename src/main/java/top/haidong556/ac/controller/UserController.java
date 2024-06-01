@@ -23,7 +23,7 @@ public class UserController {
         this.acService=acService;
     }
     @GetMapping()
-    public ModelAndView getUserPage(){
+    public ModelAndView getUserPage()throws Exception{
         User user = userDetailsService.currentUser();
         int acId = user.getAcId();
         Ac acState = acService.getAcState(acId);
@@ -34,7 +34,7 @@ public class UserController {
         return modelAndView;
     }
     @GetMapping("/temp")
-    public ModelAndView changeAcTemp( int newTemp){
+    public ModelAndView changeAcTemp( int newTemp)throws Exception{
         User user = userDetailsService.currentUser();
         int acId = user.getAcId();
         acService.changeAcTemp(acId,newTemp,userDetailsService.currentUser().getUserId());
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/windSpeed")
-    public ModelAndView changeAcWindSpeed( int newWindSpeed){
+    public ModelAndView changeAcWindSpeed( int newWindSpeed)throws Exception{
         int windSpeed=Integer.valueOf(newWindSpeed);
         User user = userDetailsService.currentUser();
         int acId = user.getAcId();
@@ -56,7 +56,7 @@ public class UserController {
         return modelAndView;
     }
     @GetMapping("/close")
-    public ModelAndView close(){
+    public ModelAndView close()throws Exception{
         User user = userDetailsService.currentUser();
         int acId = user.getAcId();
         acService.closeAc(acId,userDetailsService.currentUser().getUserId());
@@ -66,7 +66,7 @@ public class UserController {
         return modelAndView;
     }
     @GetMapping("/open")
-    public ModelAndView open(){
+    public ModelAndView open()throws Exception{
         User user = userDetailsService.currentUser();
         int acId = user.getAcId();
         acService.openAc(acId,userDetailsService.currentUser().getUserId());

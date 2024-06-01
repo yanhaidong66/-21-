@@ -32,7 +32,7 @@ class UserRepositoryTest {
     private Ac ac;
 
     @BeforeEach
-    void setupTestData() {
+    void setupTestData() throws Exception {
         ac = new Ac();
         ac.setWindSpeed(3);
         ac.setTemp(24);
@@ -46,14 +46,14 @@ class UserRepositoryTest {
     }
 
     @AfterEach
-    void cleanupTestData() {
+    void cleanupTestData() throws Exception {
         userRepository.deleteUser(user1.getUserId());
         userRepository.deleteUser(user2.getUserId());
         acRepository.deleteAc(ac.getAcId());
     }
 
     @Test
-    void addUser() {
+    void addUser() throws Exception {
 
         User retrievedUser = userRepository.getUser(user1.getUserId());
         assertNotNull(retrievedUser);
@@ -61,7 +61,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    void deleteUser() {
+    void deleteUser() throws Exception {
 
         userRepository.deleteUser(user1.getUserId());
         User deletedUser = userRepository.getUser(user1.getUserId());
@@ -69,7 +69,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    void getUserById() {
+    void getUserById() throws Exception {
         List<User> allUsers = userRepository.getAllUser();
         User userToRetrieve = allUsers.get(0);
 
@@ -79,7 +79,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    void getUserByUsername() {
+    void getUserByUsername() throws Exception {
         List<User> allUsers = userRepository.getAllUser();
         User userToRetrieve = allUsers.get(0);
 
@@ -89,7 +89,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    void getAllUser() {
+    void getAllUser() throws Exception {
         List<User> allUsers = userRepository.getAllUser();
         System.out.println(allUsers);
     }

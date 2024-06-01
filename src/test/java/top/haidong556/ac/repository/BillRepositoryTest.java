@@ -34,7 +34,7 @@ class BillRepositoryTest {
     private Ac ac;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         ac = new Ac();
         ac.setWindSpeed(3);
         ac.setTemp(24);
@@ -56,14 +56,14 @@ class BillRepositoryTest {
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDown() throws Exception {
         billRepository.deleteBillItem(billItem.getBillId());
         userRepository.deleteUser(user.getUserId());
         acRepository.deleteAc(ac.getAcId());
     }
 
     @Test
-    void getBillItemByTime() {
+    void getBillItemByTime() throws Exception {
         LocalDateTime startTime = LocalDateTime.now().minusDays(3);
         LocalDateTime endTime = LocalDateTime.now();
 
@@ -75,14 +75,14 @@ class BillRepositoryTest {
     }
 
     @Test
-    void createBillItem() {
+    void createBillItem() throws Exception {
         List<BillItem> billItems = billRepository.getBillItemByTime(billItem.getCreateTime().minusMinutes(1),billItem.getCreateTime().plusMinutes(1));
         assertNotNull(billItems);
         assertTrue(billItems.stream().anyMatch(bill -> bill.getUserId() == user.getUserId()));
     }
 
     @Test
-    void deleteBillItem() {
+    void deleteBillItem() throws Exception {
         billRepository.deleteBillItem(billItem.getBillId());
 
         List<BillItem> billItems = billRepository.getBillItemByTime(billItem.getCreateTime().minusMinutes(1), billItem.getCreateTime().plusMinutes(1));

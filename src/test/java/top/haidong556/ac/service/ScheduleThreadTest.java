@@ -29,7 +29,7 @@ public class ScheduleThreadTest {
     private User user;
     private Ac ac;
     @BeforeEach
-    void setupTestData() {
+    void setupTestData() throws Exception {
         ac = new Ac();
         ac.setWindSpeed(3);
         ac.setTemp(24);
@@ -42,7 +42,7 @@ public class ScheduleThreadTest {
         thread.start();
     }
     @AfterEach
-    void deleteTestData() throws InterruptedException {
+    void deleteTestData() throws Exception {
         userService.deleteUser(user.getUserId());
         acService.deleteAc(ac.getAcId());
         thread.join(5000);
@@ -53,7 +53,7 @@ public class ScheduleThreadTest {
 
 
     @Test
-    void changeAcTemp() {
+    void changeAcTemp() throws Exception {
         int newTemp=ac.getTemp()+1;
         scheduleService.changeAcTemp(ac.getAcId(),newTemp, GlobalConfig.SYSTEM_ID);
         Ac acState = acService.getAcState(ac.getAcId());
@@ -61,7 +61,7 @@ public class ScheduleThreadTest {
     }
 
     @Test
-    void changeAcWindSpeed() {
+    void changeAcWindSpeed() throws Exception {
         int newWindSpeed=ac.getWindSpeed()+1;
         scheduleService.changeAcWindSpeed(ac.getAcId(), newWindSpeed, GlobalConfig.SYSTEM_ID);
         Ac acState = acService.getAcState(ac.getAcId());
@@ -69,7 +69,7 @@ public class ScheduleThreadTest {
     }
 
     @Test
-    void closeAc() {
+    void closeAc() throws Exception {
         scheduleService.closeAc(ac.getAcId(), GlobalConfig.SYSTEM_ID);
         Ac acState = acService.getAcState(ac.getAcId());
         assertEquals(acState.getAcState(), Ac.AcState.CLOSE);
@@ -77,7 +77,7 @@ public class ScheduleThreadTest {
     }
 
     @Test
-    void openAc() {
+    void openAc() throws Exception {
         scheduleService.openAc(ac.getAcId(), GlobalConfig.SYSTEM_ID);
         Ac acState = acService.getAcState(ac.getAcId());
         assertEquals(acState.getAcState(), Ac.AcState.OPEN);

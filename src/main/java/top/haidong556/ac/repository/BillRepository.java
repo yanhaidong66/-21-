@@ -13,37 +13,29 @@ import java.util.List;
 public class BillRepository {
 
     // Get bill items within a specific time range
-    public List<BillItem> getBillItemByTime(LocalDateTime startTime, LocalDateTime endTime) {
+    public List<BillItem> getBillItemByTime(LocalDateTime startTime, LocalDateTime endTime) throws Exception {
         try (SqlSession session = MysqlFactory.getSession()) {
             BillMapper mapper = session.getMapper(BillMapper.class);
             return mapper.getBillItemByTime(startTime, endTime);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to retrieve bill items", e);
         }
     }
 
     // Create a new bill item
-    public void createBillItem(BillItem billItem) {
+    public void createBillItem(BillItem billItem) throws Exception {
         try (SqlSession session = MysqlFactory.getSession()) {
             BillMapper mapper = session.getMapper(BillMapper.class);
             mapper.createBillItem(billItem);
             session.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to create bill item", e);
         }
     }
 
     // Delete a bill item by ID
-    public void deleteBillItem(int billItemId) {
+    public void deleteBillItem(int billItemId) throws Exception {
         try (SqlSession session = MysqlFactory.getSession()) {
             BillMapper mapper = session.getMapper(BillMapper.class);
             mapper.deleteBillItem(billItemId);
             session.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to delete bill item", e);
         }
     }
+
 }

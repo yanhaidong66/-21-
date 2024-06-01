@@ -11,7 +11,7 @@ public class BillItem {
     private LocalDateTime createTime;
     private int userId;
     private int acId;
-    private int cost;
+    private float cost;
 
     // 枚举类型 BillState
     public enum BillState {
@@ -26,6 +26,7 @@ public class BillItem {
         this.createTime = builder.createTime;
         this.userId = builder.userId;
         this.acId = builder.acId;
+        this.cost=builder.cost;
     }
 
     // 静态内部类 Builder
@@ -35,6 +36,7 @@ public class BillItem {
         private LocalDateTime createTime;
         private int userId;
         private int acId;
+        private float cost;
 
         // 设置 billId 属性
         public Builder setBillId(int billId) {
@@ -63,6 +65,10 @@ public class BillItem {
         // 设置 acId 属性
         public Builder setAcId(int acId) {
             this.acId = acId;
+            return this;
+        }
+        public Builder setCost(float cost){
+            this.cost=cost;
             return this;
         }
 

@@ -20,6 +20,8 @@ public class OperationItem {
         this.type = builder.type;
         this.createTime = builder.createTime;
         this.acId = builder.acId;
+        this.acTemp=builder.acTemp;
+        this.acWindSpeed= builder.acWindSpeed;
     }
 
     // 静态内部类 Builder
@@ -29,6 +31,8 @@ public class OperationItem {
         private OperationType type;
         private LocalDateTime createTime;
         private int acId;
+        private int acWindSpeed;
+        private int acTemp;
 
         // 设置 operationId 属性
         public Builder setOperationId(int operationId) {
@@ -60,6 +64,16 @@ public class OperationItem {
             return this;
         }
 
+        public Builder setAcWindSpeed(int acWindSpeed) {
+            this.acWindSpeed = acWindSpeed;
+            return this;
+        }
+
+        public Builder setAcTemp(int acTemp) {
+            this.acTemp = acTemp;
+            return this;
+        }
+
         // 构建 OperationItem 实例
         public OperationItem build() {
             return new OperationItem(this);
@@ -72,4 +86,6 @@ public class OperationItem {
     private OperationType type;
     private LocalDateTime createTime;
     private int acId;
+    private int acTemp;
+    private int acWindSpeed;
 }

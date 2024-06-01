@@ -23,7 +23,12 @@ public class RoomTempService implements Runnable{
     public void run() {
         System.out.println("roomTempService run");
         while(true) {
-            List<Ac> allAcState = acService.getAllAcState();
+            List<Ac> allAcState = null;
+            try {
+                allAcState = acService.getAllAcState();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             for (Ac ac : allAcState) {
                 float roomTemp = ac.getRoomTemp();
                 int acTemp = ac.getTemp();
@@ -39,28 +44,52 @@ public class RoomTempService implements Runnable{
                         roomTemp=roomTemp-changeRate;
                         if(roomTemp<=acTemp){
                             roomTemp=acTemp;
-                            acService.closeAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
+                            try {
+                                acService.closeAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
+                            } catch (Exception e) {
+
+                            }
                         }
                     }
                     else if(roomTemp<acTemp){
                         roomTemp=roomTemp+changeRate;
                         if(roomTemp>=acTemp){
                             roomTemp=acTemp;
-                            acService.closeAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
+                            try {
+                                acService.closeAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
+                            } catch (Exception e) {
+
+                            }
                         }
                     }else{
-                        acService.closeAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
+                        try {
+                            acService.closeAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
+                        } catch (Exception e) {
+
+                        }
                     }
-                    acService.changeRoomTemp(ac.getAcId(),roomTemp);
+                    try {
+                        acService.changeRoomTemp(ac.getAcId(),roomTemp);
+                    } catch (Exception e) {
+
+                    }
                 }else {
                     if(roomTemp>DEFAULT_ROOM_TEMP){
                         roomTemp-=0.5f;
                     }else {
                         roomTemp+=0.5f;
                     }
-                    acService.changeRoomTemp(ac.getAcId(),roomTemp);
+                    try {
+                        acService.changeRoomTemp(ac.getAcId(),roomTemp);
+                    } catch (Exception e) {
+
+                    }
                     if(Math.abs(ac.getTemp()-roomTemp)>=1){
-                        acService.openAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
+                        try {
+                            acService.openAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
+                        } catch (Exception e) {
+
+                        }
                     }
                 }
 

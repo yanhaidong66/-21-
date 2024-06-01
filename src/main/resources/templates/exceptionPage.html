@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Exception Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            color: #d9534f;
+        }
+        .message {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f2dede;
+            border: 1px solid #ebccd1;
+            border-radius: 5px;
+            color: #a94442;
+        }
+        .stacktrace {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fcf8e3;
+            border: 1px solid #faebcc;
+            border-radius: 5px;
+            color: #8a6d3b;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Something went wrong!</h1>
+    <div class="message">
+        <p th:text="'Message: ' + ${errorMessage}"></p>
+    </div>
+    <div class="stacktrace">
+        <h2>Stack Trace</h2>
+        <p th:utext="${#strings.escapeXml(#arrays.toString(stackTrace))}"></p>
+    </div>
+</div>
+</body>
+</html>

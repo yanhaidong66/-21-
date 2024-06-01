@@ -76,6 +76,50 @@
         .active {
             background-color: #555;
         }
+
+        .table-container {
+            width: 90%;
+            height: 100%;
+            overflow-y: auto; /* 横向滚动 */
+        }
+
+        table {
+            width: 100%; /* 表格宽度填满父容器 */
+            height: 100%;
+            border-collapse: collapse; /* 边框合并 */
+        }
+
+        tbody {
+            width: 100%;
+        }
+
+        thead {
+            width: 100%;
+        }
+
+        thead th, tbody td {
+            padding: 20px; /* 单元格内边距 */
+            text-align: left;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2; /* 偶数行背景色 */
+        }
+
+        tbody tr:hover {
+            background-color: #ddd; /* 鼠标悬停时的背景色 */
+        }
+
+        th, td {
+            border: 1px solid #ddd; /* 表格边框 */
+            width: 20%;
+        }
+
+        th {
+            position: sticky; /* 表头固定 */
+            top: 0; /* 与顶部对齐 */
+            z-index: 1; /* 确保表头在顶部 */
+        }
     </style>
 </head>
 <body>
@@ -87,25 +131,37 @@
     <div class="nav-links">
         <a  th:href="@{/waiter/checkin}" >入住</a>
         <a  th:href="@{/waiter/checkout}" class="active">结账</a>
-        <a  th:href="@{/waiter/allUser}">查看所有入住用户</a>
+        <a  th:href="@{/waiter/allUser}" >查看所有入住用户</a>
     </div>
     <div class="logout">
         <button >登出</button>
     </div>
 </div>
 <div class="content">
-    <h1>欢迎来到酒店管理系统</h1>
-    <section id="checkin">
-        <h2>入住</h2>
-        <p>在此处处理入住手续。</p>
-    </section>
-    <section id="checkout">
-        <h2>结账</h2>
-        <p>在此处处理结账手续。</p>
-    </section>
-    <section id="view-rooms">
-        <h2>查看房间信息</h2>
-        <p>在此处查看房间的详细信息。</p>
+    <section id="opDetails">
+        <h1>cost: <span th:text="${cost}">0</span></h1>
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th >操作ID</th>
+                    <th >操作类型</th>
+                    <th >空调号</th>
+                    <th >空调温度</th>
+                    <th >空调风速</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="op : ${opDetails}">
+                    <td th:text="${op.getOperationId()}">操作ID</td>
+                    <td th:text="${op.getType()}">操作类型</td>
+                    <td th:text="${op.getAcId()}">空调号</td>
+                    <td th:text="${op.getAcTemp()}">空调温度</td>
+                    <td th:text="${op.getAcWindSpeed()}">空调风速</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </section>
 </div>
 </body>

@@ -31,7 +31,7 @@ public class ManagerController {
 
     @GetMapping("/show")
     public ModelAndView getCostTableByTime(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+                                           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws Exception{
         System.out.println(startDate+":"+endDate);
         LocalDateTime startTime = startDate.atStartOfDay();
         LocalDateTime endTime = endDate.atStartOfDay().plusDays(1).minusSeconds(1); // Adjust end time to end of day

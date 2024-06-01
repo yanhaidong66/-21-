@@ -19,16 +19,23 @@ public class AdminController {
     public AdminController(AcService acService){
         this.acService=acService;
     }
+    public ModelAndView modelAndView(Exception ex){
+        ModelAndView modelAndView=new ModelAndView("exceptionPage");
+        modelAndView.addObject("errorMessage", ex.getMessage());
+        modelAndView.addObject("stackTrace", ex.getStackTrace());
+        return modelAndView;
+    }
 
     @GetMapping()
-    public ModelAndView getAllAcState(){
+    public ModelAndView getAllAcState()throws Exception{
         ModelAndView modelAndView=new ModelAndView("admin");
         List<Ac> allAcState = acService.getAllAcState();
         modelAndView.addObject("allAc",allAcState);
         return modelAndView;
     }
+
     @GetMapping("/addAc")
-    public ModelAndView addAc(String room){
+    public ModelAndView addAc(String room)throws Exception{
         Ac ac=new Ac();
         ac.setRoom(room);
         acService.addAc(ac);
@@ -38,7 +45,7 @@ public class AdminController {
         return modelAndView;
     }
     @GetMapping("/temp")
-    public ModelAndView changeAcTemp(int acId, int newTemp){
+    public ModelAndView changeAcTemp(int acId, int newTemp)throws Exception{
         ModelAndView modelAndView=new ModelAndView();
         modelAndView.setViewName("login");
         acService.changeAcTemp(acId,newTemp, GlobalConfig.ADMIN_ID);
@@ -46,7 +53,7 @@ public class AdminController {
     }
 
     @GetMapping("/windSpeed")
-    public ModelAndView changeAcWindSpeed(int acId,int newWindSpeed){
+    public ModelAndView changeAcWindSpeed(int acId,int newWindSpeed)throws Exception{
         acService.changeAcWindSpeed(acId,newWindSpeed, GlobalConfig.ADMIN_ID);
         ModelAndView modelAndView=new ModelAndView("admin");
         List<Ac> allAcState = acService.getAllAcState();
@@ -54,7 +61,7 @@ public class AdminController {
         return modelAndView;
     }
     @GetMapping("/close")
-    public ModelAndView closeAc(int acId){
+    public ModelAndView closeAc(int acId)throws Exception{
         acService.closeAc(acId, GlobalConfig.ADMIN_ID);
         ModelAndView modelAndView=new ModelAndView("admin");
         List<Ac> allAcState = acService.getAllAcState();
@@ -62,7 +69,7 @@ public class AdminController {
         return modelAndView;
     }
     @GetMapping("/open")
-    public ModelAndView openAc(int acId){
+    public ModelAndView openAc(int acId)throws Exception{
         acService.openAc(acId, GlobalConfig.ADMIN_ID);
         ModelAndView modelAndView=new ModelAndView("admin");
         List<Ac> allAcState = acService.getAllAcState();

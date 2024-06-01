@@ -17,5 +17,13 @@ public class Ac {
     public enum AcState {
          CLOSE,OPEN;
     }
+    public void setWindSpeed(int windSpeed){
+        if(windSpeed>3)
+            this.windSpeed=3;
+        if(windSpeed<1)
+            this.windSpeed=1;
+        if(windSpeed>=1&&windSpeed<=3)
+            this.windSpeed=windSpeed;
+    }
 
 }

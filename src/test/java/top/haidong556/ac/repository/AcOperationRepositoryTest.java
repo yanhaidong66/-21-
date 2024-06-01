@@ -29,7 +29,7 @@ class AcOperationRepositoryTest {
     private User user;
     private Ac ac;
     @BeforeEach
-    void setupTestData() {
+    void setupTestData() throws Exception {
         ac = new Ac();
         ac.setWindSpeed(3);
         ac.setTemp(24);
@@ -49,21 +49,21 @@ class AcOperationRepositoryTest {
     }
 
     @AfterEach
-    void cleanupTestData() {
+    void cleanupTestData() throws Exception {
         acOperationRepository.deleteOperationItem(operationItem.getOperationId());
         userRepository.deleteUser(user.getUserId());
         acRepository.deleteAc(ac.getAcId());
     }
 
     @Test
-    void getAcOperationTableByUserId() {
+    void getAcOperationTableByUserId() throws Exception {
         List<OperationItem> result = acOperationRepository.getAcOperationTableByUserId(user.getUserId());
         assertNotNull(result);
         System.out.println(result);
     }
 
     @Test
-    void getAcOperationTableByAcId() {
+    void getAcOperationTableByAcId() throws Exception {
         int acId = operationItem.getAcId();
         List<OperationItem> result = acOperationRepository.getAcOperationTableByAcId(acId);
 
@@ -72,7 +72,7 @@ class AcOperationRepositoryTest {
     }
 
     @Test
-    void createOperationItem() {
+    void createOperationItem() throws Exception {
         List<OperationItem> result = acOperationRepository.getAcOperationTableByUserId(operationItem.getUserId());
         assertNotNull(result);
         assertEquals(1, result.size());

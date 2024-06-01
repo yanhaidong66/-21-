@@ -11,125 +11,96 @@ import java.util.List;
 @Repository
 public class AcRepository {
 
-    public void addAc(Ac ac) {
+    public void addAc(Ac ac) throws Exception {
         try (SqlSession session = MysqlFactory.getSession()) {
             AcMapper mapper = session.getMapper(AcMapper.class);
             mapper.addAc(ac);
             session.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to add AC", e);
         }
     }
-    public Ac getAcState(String acRoom){
+
+    public Ac getAcState(String acRoom) throws Exception {
         try (SqlSession session = MysqlFactory.getSession()) {
             AcMapper mapper = session.getMapper(AcMapper.class);
             return mapper.getAcStateByRoom(acRoom);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to get AC state", e);
         }
     }
 
-    public Ac getAcState(int acId) {
+    public Ac getAcState(int acId) throws Exception {
         try (SqlSession session = MysqlFactory.getSession()) {
             AcMapper mapper = session.getMapper(AcMapper.class);
             return mapper.getAcStateById(acId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to get AC state", e);
-        }
-    }
-    public int getRoomTemp(int acId) {
-        try (SqlSession session = MysqlFactory.getSession()) {
-            AcMapper mapper = session.getMapper(AcMapper.class);
-            return mapper.getRoomTemp(acId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to get AC roomTemp", e);
-        }
-    }
-    public List<Ac> getAllAcState() {
-        try (SqlSession session = MysqlFactory.getSession()) {
-            AcMapper mapper = session.getMapper(AcMapper.class);
-            return mapper.getAllAcState();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to get all AC state", e);
         }
     }
 
-    public void closeAc(int acId) {
+    public int getRoomTemp(int acId) throws Exception {
+        try (SqlSession session = MysqlFactory.getSession()) {
+            AcMapper mapper = session.getMapper(AcMapper.class);
+            return mapper.getRoomTemp(acId);
+        }
+    }
+
+    public List<Ac> getAllAcState() throws Exception {
+        try (SqlSession session = MysqlFactory.getSession()) {
+            AcMapper mapper = session.getMapper(AcMapper.class);
+            return mapper.getAllAcState();
+        }
+    }
+
+    public void closeAc(int acId) throws Exception {
         try (SqlSession session = MysqlFactory.getSession()) {
             AcMapper mapper = session.getMapper(AcMapper.class);
             mapper.closeAc(acId);
             session.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to close AC", e);
         }
     }
 
-    public void openAc(int acId) {
+    public void openAc(int acId) throws Exception {
         try (SqlSession session = MysqlFactory.getSession()) {
             AcMapper mapper = session.getMapper(AcMapper.class);
             mapper.openAc(acId);
             session.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to open AC", e);
         }
     }
 
-    public void changeAcWindSpeed(int acId, int newWindSpeed) {
+    public void changeAcWindSpeed(int acId, int newWindSpeed) throws Exception {
         try (SqlSession session = MysqlFactory.getSession()) {
             AcMapper mapper = session.getMapper(AcMapper.class);
             mapper.changeAcWindSpeed(acId, newWindSpeed);
             session.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to change AC wind speed", e);
         }
     }
 
-    public void changeAcTemp(int acId, int newTemp) {
+    public void changeAcTemp(int acId, int newTemp) throws Exception {
         try (SqlSession session = MysqlFactory.getSession()) {
             AcMapper mapper = session.getMapper(AcMapper.class);
             mapper.changeAcTemp(acId, newTemp);
             session.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to change AC temperature", e);
         }
     }
-    public void changeRoomTemp(int acId, float newTemp) {
+
+    public void changeRoomTemp(int acId, float newTemp) throws Exception {
         try (SqlSession session = MysqlFactory.getSession()) {
             AcMapper mapper = session.getMapper(AcMapper.class);
-            mapper.changeRoomTemp( newTemp,acId);
+            mapper.changeRoomTemp(newTemp, acId);
             session.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to change room temperature", e);
         }
     }
-    public void deleteAc(int acId){
+
+    public void deleteAc(int acId) throws Exception {
         try (SqlSession session = MysqlFactory.getSession()) {
             AcMapper mapper = session.getMapper(AcMapper.class);
             mapper.deleteAcById(acId);
             session.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to delete AC", e);
         }
     }
-    public void deleteAc(String acRoom){
+
+    public void deleteAc(String acRoom) throws Exception {
         try (SqlSession session = MysqlFactory.getSession()) {
             AcMapper mapper = session.getMapper(AcMapper.class);
             mapper.deleteAcByRoom(acRoom);
             session.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to delete AC", e);
         }
     }
+
 }

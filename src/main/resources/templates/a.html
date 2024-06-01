@@ -1,3 +1,21 @@
+
+<body>
+<div class="container">
+    <h1>Something went wrong!</h1>
+    <div class="message">
+        <p th:text="'Message: ' + ${exceptionMessage.getMessage()}"></p>
+    </div>
+    <div class="stacktrace">
+        <h2>Stack Trace</h2>
+        <p th:utext="${#strings.escapeXml(#arrays.toString(exceptionMessage.getStackTrace()))}"></p>
+    </div>
+</div>
+</body>
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

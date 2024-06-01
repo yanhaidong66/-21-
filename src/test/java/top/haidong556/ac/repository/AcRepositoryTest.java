@@ -20,7 +20,7 @@ class AcRepositoryTest {
     private Ac ac;
 
     @BeforeEach
-    void setupTestData() {
+    void setupTestData() throws Exception {
         ac = new Ac();
         ac.setWindSpeed(3);
         ac.setTemp(24);
@@ -30,12 +30,12 @@ class AcRepositoryTest {
     }
 
     @AfterEach
-    void cleanupTestData() {
+    void cleanupTestData() throws Exception {
         acRepository.deleteAc(ac.getAcId());
     }
 
     @Test
-    void getAcState() {
+    void getAcState() throws Exception {
         Ac retrievedAc = acRepository.getAcState(ac.getAcId());
         assertNotNull(retrievedAc);
         assertEquals(ac.getWindSpeed(), retrievedAc.getWindSpeed());
@@ -48,7 +48,7 @@ class AcRepositoryTest {
     }
 
     @Test
-    void closeAc() {
+    void closeAc() throws Exception {
         acRepository.closeAc(ac.getAcId());
 
         Ac retrievedAc = acRepository.getAcState(ac.getAcId());
@@ -56,14 +56,14 @@ class AcRepositoryTest {
     }
 
     @Test
-    void openAc() {
+    void openAc() throws Exception {
         acRepository.openAc(ac.getAcId());
         Ac retrievedAc = acRepository.getAcState(ac.getAcId());
         assertEquals(Ac.AcState.OPEN, retrievedAc.getAcState());
     }
 
     @Test
-    void changeAcWindSpeed() {
+    void changeAcWindSpeed() throws Exception {
         acRepository.changeAcWindSpeed(ac.getAcId(), 5);
 
         Ac retrievedAc = acRepository.getAcState(ac.getAcId());
@@ -71,7 +71,7 @@ class AcRepositoryTest {
     }
 
     @Test
-    void changeAcTemp() {
+    void changeAcTemp() throws Exception {
         acRepository.changeAcTemp(ac.getAcId(), 18);
 
         Ac retrievedAc = acRepository.getAcState(ac.getAcId());
@@ -79,7 +79,7 @@ class AcRepositoryTest {
     }
 
     @Test
-    void getAllAcState() {
+    void getAllAcState() throws Exception {
         List<Ac> allAcStates = acRepository.getAllAcState();
         for(Ac ac:allAcStates){
             System.out.println(ac);
