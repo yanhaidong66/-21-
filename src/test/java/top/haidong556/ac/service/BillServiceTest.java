@@ -6,10 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import top.haidong556.ac.entity.ac.Ac;
+import top.haidong556.ac.entity.bill.BillItem;
 import top.haidong556.ac.entity.role.User;
 import top.haidong556.ac.util.RandomData;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,5 +60,36 @@ class BillServiceTest {
 
         cost= billService.getCost(user.getUserId());
         System.out.println(cost);
+    }
+
+    @Test
+    void createBillItem() throws Exception {
+        BillItem billItem1=new BillItem.Builder()
+                .setUserId(user.getUserId())
+                .setAcId(ac.getAcId())
+                .setCost(0)
+                .setState(BillItem.BillState.NOT_PAY)
+                .build();
+        billService.createBillItem(billItem1);
+        acService.openAc(ac.getAcId(),user.getUserId());
+        sleep(1000);
+        acService.changeAcWindSpeed(ac.getAcId(),4,user.getUserId());
+        sleep(1000);
+
+
+        BillItem billItem2 = new BillItem.Builder()
+                .setUserId(user.getUserId())
+                .setAcId(ac.getAcId())
+                .setCost(billService.getCost(user.getUserId()))
+                .setState(BillItem.BillState.HAVE_PAY)
+                .setCreateTime(LocalDateTime.now())
+                .build();
+        billService.createBillItem(billItem2);
+        List<BillItem> billItemByTime = billService.getBillItemByTime(LocalDateTime.now().minusSeconds(5), LocalDateTime.now().plusSeconds(5));
+        System.out.println(billItemByTime);
+    }
+
+    @Test
+    void deleteBillItem() {
     }
 }

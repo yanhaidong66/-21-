@@ -1,7 +1,19 @@
 package top.haidong556.ac.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 public class GlobalConfig {
     static {
+        InputStream config = GlobalConfig.class.getClassLoader().getResourceAsStream("global_config.properties");
+        Properties property=new Properties();
+        try {
+            property.load(config);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         ROOM_DEFAULT_TEMP=25;
         PER_SECOND_MILLISECOND=1000;
         AC_DEFAULT_WIND_SPEED=1;

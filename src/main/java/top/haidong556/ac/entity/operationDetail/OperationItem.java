@@ -1,6 +1,7 @@
 package top.haidong556.ac.entity.operationDetail;
 
 import lombok.Data;
+import top.haidong556.ac.util.GlobalConfig;
 
 import java.time.LocalDateTime;
 
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 public class OperationItem {
     // 枚举类型 OperationType
     public enum OperationType {
-        CLOSE_AC, OPEN_AC, CHANGE_AC_TEMP, CHANGE_AC_WIND_SPEED;
+        CLOSE_AC, OPEN_AC, CHANGE_AC_TEMP, CHANGE_AC_WIND_SPEED,NO_OPERATION;
     }
     public OperationItem(){}
 
@@ -27,12 +28,12 @@ public class OperationItem {
     // 静态内部类 Builder
     public static class Builder {
         private int operationId;
-        private int userId;
-        private OperationType type;
-        private LocalDateTime createTime;
+        private int userId= GlobalConfig.SYSTEM_ID;
+        private OperationType type=OperationType.NO_OPERATION;
+        private LocalDateTime createTime=LocalDateTime.now();
         private int acId;
-        private int acWindSpeed;
-        private int acTemp;
+        private int acWindSpeed=2;
+        private int acTemp=GlobalConfig.AC_DEFAULT_TEMP;
 
         // 设置 operationId 属性
         public Builder setOperationId(int operationId) {
@@ -65,7 +66,12 @@ public class OperationItem {
         }
 
         public Builder setAcWindSpeed(int acWindSpeed) {
-            this.acWindSpeed = acWindSpeed;
+            if(acWindSpeed>3)
+                this.acWindSpeed=3;
+            else if(acWindSpeed<1)
+                this.acWindSpeed=1;
+            else if(acWindSpeed>=1&&acWindSpeed<=3)
+                this.acWindSpeed=acWindSpeed;
             return this;
         }
 

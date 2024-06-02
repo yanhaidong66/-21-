@@ -1,82 +1,32 @@
 
-<body>
-<div class="container">
-    <h1>Something went wrong!</h1>
-    <div class="message">
-        <p th:text="'Message: ' + ${exceptionMessage.getMessage()}"></p>
-    </div>
-    <div class="stacktrace">
-        <h2>Stack Trace</h2>
-        <p th:utext="${#strings.escapeXml(#arrays.toString(exceptionMessage.getStackTrace()))}"></p>
-    </div>
-</div>
-</body>
-
-
-
-
-
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Change AC Properties</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Hello World</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800|Roboto:400,500,700" rel="stylesheet">
+
+    <!-- Boomerang CSS (including Bootstrap) -->
+    <link type="text/css" href="../static/css/theme.css" rel="stylesheet">
 </head>
 <body>
-<button onclick="openChangeAcWindow()">修改空调状态</button>
+<main class="main"><button type="button" class="btn btn-primary">
+    Notifications <span class="badge badge-light ml-2">4</span>
+</button></main>
 
-<script>
-    function openChangeAcWindow() {
-        const acId = 123; // Replace with actual AC ID
-        const newWindow = window.open("", "_blank", "width=600,height=400");
-        const newWindowContent = `
-    <h2>Change AC Properties</h2>
-    <label for="acId">AC ID:</label>
-    <input type="number" id="acId"><br><br>
+<!-- Bootstrap JS -->
+<script src="/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/vendor/popper/popper.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
 
-    <label for="acStatus">AC Status:</label>
-    <select id="acStatus">
-        <option value="open">Open</option>
-        <option value="close">Close</option>
-    </select>   <button onclick="updateAcStatus()">Update ac Status</button><br><br>
+<!-- FontAwesome 5 -->
+<script src="assets/vendor/fontawesome/js/fontawesome-all.min.js"></script>
 
-    <label for="newTemp">New Temperature:</label>
-    <input type="number" id="newTemp" value="25">   <button onclick="updateAcTemp()">Update ac temp</button><br><br>
-
-    <label for="newWindSpeed">New Wind Speed:</label>
-    <input type="number" id="newWindSpeed" value="2">  <button onclick="updateAcWindSpeed()">Update ac windSpeed</button><br><br>
-
-
-`;
-        newWindow.document.body.innerHTML = newWindowContent;
-    }
-
-    function updateAcStatus(){
-        var acId = document.getElementById("acId").value;
-        var acStatus = document.getElementById("acStatus").value;
-        if(acStatus === "open"){
-            fetch(`/admin/open?acId=${acId}`).then(() => console.log("Change status successful")).catch(res => console.error(res));
-        } else {
-            fetch(`/admin/close?acId=${acId}`).then(() => console.log("Change status successful")).catch(res => console.error(res));
-        }
-    }
-    function updateAcTemp() {
-        var newTemp = document.getElementById("newTemp").value;
-        var acId = document.getElementById("acId").value;
-        fetch(`/admin/temp?acId=${acId}&newTemp=${newTemp}`)
-            .then(() => console.log("Update Temperature successful"))
-            .catch(err => console.error(err));
-    }
-
-    function updateAcWindSpeed() {
-        var newWindSpeed = document.getElementById("newWindSpeed").value;
-        var acId = document.getElementById("acId").value;
-        fetch(`/admin/windSpeed?acId=${acId}&newWindSpeed=${newWindSpeed}`)
-            .then(() => console.log("Update Wind Speed successful"))
-            .catch(err => console.error(err));
-    }
-</script>
+<!-- Boomerang JS -->
+<script src="/assets/js/theme.js"></script>
 </body>
 </html>

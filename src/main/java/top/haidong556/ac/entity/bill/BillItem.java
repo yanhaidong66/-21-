@@ -1,6 +1,7 @@
 package top.haidong556.ac.entity.bill;
 
 import lombok.Data;
+import top.haidong556.ac.util.GlobalConfig;
 
 import java.time.LocalDateTime;
 
@@ -32,11 +33,11 @@ public class BillItem {
     // 静态内部类 Builder
     public static class Builder {
         private int billId;
-        private BillState state;
-        private LocalDateTime createTime;
-        private int userId;
+        private BillState state=BillState.NOT_PAY;
+        private LocalDateTime createTime=LocalDateTime.now();
+        private int userId= GlobalConfig.SYSTEM_ID;
         private int acId;
-        private float cost;
+        private float cost=0;
 
         // 设置 billId 属性
         public Builder setBillId(int billId) {

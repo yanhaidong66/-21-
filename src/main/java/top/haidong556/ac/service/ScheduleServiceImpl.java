@@ -11,12 +11,13 @@ import java.util.concurrent.PriorityBlockingQueue;
 @Service
 public class ScheduleServiceImpl extends ScheduleService{
     //无界阻塞优先级队列，线程安全
-    private PriorityBlockingQueue<ServiceObject> waitQueue;
-    private PriorityBlockingQueue<ServiceObject> serviceQueue;
+//    private PriorityBlockingQueue<ServiceObject> waitQueue;
+//    private PriorityBlockingQueue<ServiceObject> serviceQueue;
     //你用的队列线程不安全，并发会出问题
 
-//    private ArrayList<ServiceObject> waitQueue;
-//    private ArrayList<ServiceObject> serviceQueue;
+    private ArrayList<ServiceObject> waitQueue;
+    private ArrayList<ServiceObject> serviceQueue;
+    int capacity;
 
 
     public int getCapacity() {

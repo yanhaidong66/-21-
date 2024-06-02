@@ -36,8 +36,8 @@ create table t_ac_operation(
 create table t_bill(
     bill_id int primary key auto_increment,
     bill_state tinyint not null default 0,/* 0是已办理入住，1是已结账 */
-    bill_cost float default 0,
-    bill_create_time datetime default now(),
+    bill_cost float not null default 0,
+    bill_create_time datetime not null default now(),
     bill_user_id int not null ,
     bill_ac_id int not null,
     index(bill_create_time)
