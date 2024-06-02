@@ -2,6 +2,7 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>酒店管理系统</title>
     <style>
@@ -161,8 +162,8 @@
 </div>
 <div class="content">
     <div class="userForm">
-        <h2>用户注册</h2>
-        <form id="userForm" action="/waiter/addUser" method="post">
+        <h2>用户入住</h2>
+        <form id="userForm" action="/waiter/checkin" method="post">
             <div>
                 <label for="username">用户名:</label>
                 <input type="text" id="username" name="username" required>
@@ -178,11 +179,18 @@
             <div>
                 <button type="submit">提交</button>
             </div>
+            <div>
+                <div th:if="${error == false}" class="alert alert-success" role="alert">
+                    Success! Your operation was completed successfully.
+                </div>
+                <div th:if="${error == true}" class="alert alert-danger" role="alert">
+                    Error! Something went wrong. Please try again.
+                </div>
+            </div>
+
         </form>
     </div>
-    <div class="confirmation-message" id="confirmationMessage">
-        用户注册成功！
-    </div>
+
 </div>
 </body>
 <script>
@@ -196,23 +204,7 @@
             form.submit();
         });
 
-        var userForm = document.getElementById('userForm');
-        userForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-            var formData = new FormData(userForm);
-            fetch('/waiter/checkin', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        var confirmationMessage = document.getElementById('confirmationMessage');
-                        confirmationMessage.style.display = 'block';
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        });
     });
+
 </script>
 </html>

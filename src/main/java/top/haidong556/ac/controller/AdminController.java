@@ -19,12 +19,7 @@ public class AdminController {
     public AdminController(AcService acService){
         this.acService=acService;
     }
-    public ModelAndView modelAndView(Exception ex){
-        ModelAndView modelAndView=new ModelAndView("exceptionPage");
-        modelAndView.addObject("errorMessage", ex.getMessage());
-        modelAndView.addObject("stackTrace", ex.getStackTrace());
-        return modelAndView;
-    }
+
 
     @GetMapping()
     public ModelAndView getAllAcState()throws Exception{

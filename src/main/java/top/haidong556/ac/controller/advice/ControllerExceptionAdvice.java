@@ -10,7 +10,7 @@ public class ControllerExceptionAdvice {
     public ModelAndView exceptionHandler(Exception ex){
         ModelAndView modelAndView=new ModelAndView("exceptionPage");
         modelAndView.addObject("errorMessage", ex.getMessage());
-        modelAndView.addObject("stackTrace", ex.getStackTrace());
+        modelAndView.addObject("stackTrace", ex.getStackTrace().toString());
         return modelAndView;
     }
 }

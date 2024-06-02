@@ -41,25 +41,34 @@ public class WaiterController {
         return modelAndView;
     }
     @PostMapping("/checkin")
-    public ModelAndView checkin(String username,String password,String room)throws Exception{
-        User user=new User(username,password);
-        Ac ac=acService.getAcState(room);
-        userService.createUser(user);
-        BillItem billItem = new BillItem.Builder()
-                .setAcId(ac.getAcId())
-                .setCreateTime(LocalDateTime.now())
-                .setUserId(user.getUserId())
-                .setState(BillItem.BillState.NOT_PAY)
-                .setCost(0)
-                .build();
-        billService.createBillItem(billItem);
-        ModelAndView modelAndView = new ModelAndView("waiter-checkin");
-        Waiter waiter = userDetailsService.currentWaiter();
-        modelAndView.addObject("waiter",waiter);
-        return modelAndView;
+    public ModelAndView checkin(@RequestParam String username,@RequestParam String password,@RequestParam String room){
+        try {
+            User user = new User(username, password);
+            Ac ac = acService.getAcState(room);
+            user.setAcId(ac.getAcId());
+            userService.createUser(user);
+            System.out.println(user);
+            BillItem billItem = new BillItem.Builder()
+                    .setAcId(ac.getAcId())
+                    .setCreateTime(LocalDateTime.now())
+                    .setUserId(user.getUserId())
+                    .setState(BillItem.BillState.NOT_PAY)
+                    .setCost(0)
+                    .build();
+            billService.createBillItem(billItem);
+            ModelAndView modelAndView = new ModelAndView("waiter-checkin");
+            modelAndView.addObject("error",false);
+            Waiter waiter = userDetailsService.currentWaiter();
+            modelAndView.addObject("waiter", waiter);
+            return modelAndView;
+        }catch (Exception e){
+            ModelAndView modelAndView = new ModelAndView("waiter-checkin");
+            Waiter waiter = userDetailsService.currentWaiter();
+            modelAndView.addObject("waiter", waiter);
+            modelAndView.addObject("error",true);
+            return modelAndView;
+        }
     }
-
-
     @GetMapping("/checkout")
     public ModelAndView checkoutPage(String username)throws Exception{
         ModelAndView modelAndView=new ModelAndView("waiter-checkout");

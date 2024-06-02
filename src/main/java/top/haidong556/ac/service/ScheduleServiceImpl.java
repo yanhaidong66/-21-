@@ -35,7 +35,11 @@ public class ScheduleServiceImpl extends ScheduleService{
         else if (waitQueue.size()+serviceQueue.size()<=capacity) {  //等待列表和服务列表小于上限，直接进行服务
             for(ServiceObject temp:waitQueue){
                 temp.startService();
-                acService.openAc(temp.getAcId(),);
+                try {
+                    acService.openAc(temp.getAcId(),temp.getUserid());
+                } catch (Exception e) {
+
+                }
                 serviceQueue.add(temp);
             }
             waitQueue.clear();
@@ -54,7 +58,11 @@ public class ScheduleServiceImpl extends ScheduleService{
             ServiceObject temp=waitQueue.remove(0);
             if(beforeService.indexOf(temp)!=-1){
                 temp.startService();
-                acService.openAc(temp.getAcId());
+                try {
+                    acService.openAc(temp.getAcId(),temp.getUserid());
+                } catch (Exception e) {
+
+                }
                 serviceQueue.add(0,temp);
             }
             else{
@@ -74,7 +82,11 @@ public class ScheduleServiceImpl extends ScheduleService{
             }
             if(needWrite){
                 //将temp写入数据库
-                acService.closeAc(temp.getAcId());
+                try {
+                    acService.closeAc(temp.getAcId(), temp.getUserid());
+                } catch (Exception e) {
+
+                }
             }
         }
     }
@@ -86,11 +98,11 @@ public class ScheduleServiceImpl extends ScheduleService{
         Queue<ServiceObject> low=new LinkedList<>();
 
         for(ServiceObject temp:waitQueue){
-            if(temp.getWindSpeed()==2)
+            if(temp.getWindSpeed()==3)
                 high.add(temp);
-            else if (temp.getWindSpeed()==1)
+            else if (temp.getWindSpeed()==2)
                 medium.add(temp);
-            else if (temp.getWindSpeed()==0)
+            else if (temp.getWindSpeed()==1)
                 low.add(temp);
         }
         waitQueue.clear();
@@ -170,7 +182,7 @@ public class ScheduleServiceImpl extends ScheduleService{
     }
 
     @Override
-    public void closeAc(int acId) {
+    public void closeAc(int acId,int userId)throws Exception {
 
         int i=0;
         for(ServiceObject t:serviceQueue){  //要关机的正在服务
@@ -181,7 +193,7 @@ public class ScheduleServiceImpl extends ScheduleService{
                 ServiceObject toAdd=waitQueue.remove(0);
                 toAdd.startService();
                 serviceQueue.add(toAdd);
-                acService.openAc(toAdd.getAcId());
+                acService.openAc(toAdd.getAcId(),userId);
                 System.out.println("service of room"+acId+" poweroff");
                 return;
             }
@@ -196,21 +208,28 @@ public class ScheduleServiceImpl extends ScheduleService{
             }
             i++;
         }
-        acService.closeAc(acId);
+        acService.closeAc(acId,userId);
     }
 
     @Override
-    public void openAc(int acId) {
+    public void openAc(int acId,int userId)throws Exception {
 
         int i=findIndexByid(acId);
         if(i==-1){
             ServiceObject t=new ServiceObject(acId);
+            t.setUserid(userId);
+            if(serviceQueue.size()<capacity){
+                t.startService();
+                serviceQueue.add(t);
+                acService.openAc(t.getAcId(),userId);
+                System.out.println("service of room"+acId+"created");
+                return;
+            }
             waitQueue.add(t);
             System.out.println("service of room"+acId+"created");
             return;
         }
         System.out.println("service already existed");
-        acService.openAc(acId);
     }
 
     public void updateWorkMode(int acId,int mode){        //改变工作模式
