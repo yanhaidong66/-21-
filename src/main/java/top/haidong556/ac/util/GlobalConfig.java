@@ -18,7 +18,6 @@ public class GlobalConfig {
         PER_SECOND_MILLISECOND = Integer.parseInt(property.getProperty("PER_SECOND_MILLISECOND"),1000);  // 固定值，无需从 properties 文件读取
         AC_DEFAULT_WIND_SPEED = Integer.parseInt(property.getProperty("AC_DEFAULT_WIND_SPEED"),2);
         AC_DEFAULT_TEMP = Integer.parseInt(property.getProperty("AC_DEFAULT_TEMP"),15);
-
         ADMIN_ID = Integer.parseInt(property.getProperty("ADMIN_ID"),3);
         WAITER_ID = Integer.parseInt(property.getProperty("WAITER_ID"),2);
         MANAGER_ID = Integer.parseInt(property.getProperty("MANAGER_ID"),4);
