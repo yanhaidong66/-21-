@@ -31,7 +31,7 @@ public class ScheduleThreadTest {
     @BeforeEach
     void setupTestData() throws Exception {
         ac = new Ac();
-        ac.setWindSpeed(3);
+        ac.setWindSpeed(2);
         ac.setTemp(24);
         ac.setRoom(UUID.randomUUID().toString().replace("-", "").substring(0, 4));
         ac.setAcState(Ac.AcState.CLOSE);
@@ -39,6 +39,7 @@ public class ScheduleThreadTest {
         user = new User(UUID.randomUUID().toString().replace("-", "").substring(0, 10), "password1", ac.getAcId());
         userService.createUser(user);
         thread=new Thread(scheduleService);
+        //scheduleService.openAc(ac.getAcId(), user.getUserId());
         thread.start();
     }
     @AfterEach
@@ -78,7 +79,7 @@ public class ScheduleThreadTest {
 
     @Test
     void openAc() throws Exception {
-        scheduleService.openAc(ac.getAcId(), GlobalConfig.SYSTEM_ID);
+        scheduleService.openAc(ac.getAcId(), GlobalConfig.SYSTEM_ID,ac.getWindSpeed());
         Ac acState = acService.getAcState(ac.getAcId());
         assertEquals(acState.getAcState(), Ac.AcState.OPEN);
     }
