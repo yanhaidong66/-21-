@@ -12,6 +12,7 @@ import top.haidong556.ac.repository.AcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.haidong556.ac.security.MyUserDetailsServiceImpl;
+import top.haidong556.ac.util.GlobalConfig;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,12 +30,14 @@ public class AcService {
 
     public void addAc(Ac ac)throws Exception {
         acRepository.addAc(ac);
-        System.out.println("添加空调设备："+ac);
+        if(GlobalConfig.SHOW_REPOSITORY_OPERATION_MESSAGE==true)
+            System.out.println("添加空调设备："+ac);
     }
 
     public void changeAcTemp(int acId, int newTemp,int userId)throws Exception {
         acRepository.changeAcTemp(acId, newTemp);
-        System.out.println("修改空调id="+acId+"温度为"+newTemp);
+        if(GlobalConfig.SHOW_REPOSITORY_OPERATION_MESSAGE==true)
+            System.out.println("修改空调id="+acId+"温度为"+newTemp);
         Ac acState = acRepository.getAcState(acId);
         OperationItem operationItem=new OperationItem.Builder()
                 .setAcId(acId)
@@ -59,7 +62,8 @@ public class AcService {
                 .setCreateTime(LocalDateTime.now())
                 .build();
         acOperationRepository.createOperationItem(operationItem);
-        System.out.println("修改空调"+acId+"风速为："+newWindSpeed);
+        if(GlobalConfig.SHOW_REPOSITORY_OPERATION_MESSAGE==true)
+            System.out.println("修改空调"+acId+"风速为："+newWindSpeed);
     }
 
     public void closeAc(int acId,int userId)throws Exception {
@@ -74,7 +78,8 @@ public class AcService {
                 .setCreateTime(LocalDateTime.now())
                 .build();
         acOperationRepository.createOperationItem(operationItem);
-        System.out.println("关闭空调"+acId);
+        if(GlobalConfig.SHOW_REPOSITORY_OPERATION_MESSAGE==true)
+            System.out.println("关闭空调"+acId);
 
     }
 
@@ -90,7 +95,8 @@ public class AcService {
                 .setCreateTime(LocalDateTime.now())
                 .build();
         acOperationRepository.createOperationItem(operationItem);
-        System.out.println("打开空调"+acId);
+        if(GlobalConfig.SHOW_REPOSITORY_OPERATION_MESSAGE==true)
+            System.out.println("打开空调"+acId);
     }
 
     public List<OperationItem> getAcDetailTableByUserId(int userId)throws Exception {

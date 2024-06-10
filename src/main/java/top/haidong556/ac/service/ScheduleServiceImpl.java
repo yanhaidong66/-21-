@@ -41,18 +41,23 @@ public class ScheduleServiceImpl extends ScheduleService  {
     }
     @PostConstruct
     public void init() throws Exception {
+        if(GlobalConfig.INIT_AC==false)
+            return;
         List<Ac> allAcState = acService.getAllAcState();
-        System.out.println("init");
+        System.out.println("INIT_AC_START_______________________________");
         for(Ac ac:allAcState){
             if(ac.getAcState()== Ac.AcState.OPEN){
                 openAc(ac.getAcId(),ac.getWindSpeed(), GlobalConfig.SYSTEM_ID);
                 System.out.println("初始化开启空调："+ac);
             }
         }
+        System.out.println("INIT_AC_END_____________________________");
     }
 
     @Override
     public void run() {
+        int perSecondMillisecond = GlobalConfig.PER_SECOND_MILLISECOND;
+
         ArrayList<ServiceObject> beforeService = new ArrayList<>();
         if (waitQueue.isEmpty())
             return;

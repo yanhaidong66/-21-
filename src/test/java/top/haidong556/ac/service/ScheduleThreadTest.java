@@ -48,8 +48,9 @@ public class ScheduleThreadTest {
     void deleteTestData() throws Exception {
         userService.deleteUser(user.getUserId());
         acService.deleteAc(ac.getAcId());
-        thread.join(1000);
+//        thread.join(3000);
     }
+
 
     @Test
     void start() throws Exception {
@@ -62,14 +63,14 @@ public class ScheduleThreadTest {
             userService.createUser(userTemp);
         }
         for(int i=0;i<10;i++){
-            Ac ac1 = acs.get(i);
-            System.out.println("Open ac "+ac1.getAcId());
+            Ac ac1 = acs.get(RandomData.getRandomInt(0,i));
+            System.out.println("----test class:Open ac "+ac1.getAcId());
             scheduleService.openAc(ac1.getAcId(),ac1.getWindSpeed(),GlobalConfig.SYSTEM_ID);
             int randomInt = RandomData.getRandomInt(0, i);
             Ac ac2 = acs.get(randomInt);
             int randomSpeed=RandomData.getRandomInt(0,4);
             ac2.setWindSpeed(randomSpeed);
-            System.out.println("Change ac "+ac2.getAcId()+" new speed "+ac2.getWindSpeed());
+            System.out.println("----test class:Change ac "+ac2.getAcId()+" new speed "+ac2.getWindSpeed());
             scheduleService.changeAcWindSpeed(ac2.getAcId(), ac2.getWindSpeed(), GlobalConfig.SYSTEM_ID);
         }
         System.out.println("SCHEDULE_TEST_END------------------------------------------------------------");
