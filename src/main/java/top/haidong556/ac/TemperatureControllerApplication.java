@@ -21,6 +21,6 @@ public class TemperatureControllerApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         Thread roomTempServiceThread = new Thread(roomTempService);
-        roomTempServiceThread.start();
+//        roomTempServiceThread.start();
     }
 }

@@ -11,8 +11,12 @@ import top.haidong556.ac.entity.role.User;
 import top.haidong556.ac.repository.AcRepository;
 import top.haidong556.ac.repository.UserRepository;
 import top.haidong556.ac.util.GlobalConfig;
+import top.haidong556.ac.util.RandomData;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,29 +32,49 @@ public class ScheduleThreadTest {
     Thread thread;
     private User user;
     private Ac ac;
+
+    private List<Ac> acs=new LinkedList<>();
+    private List<User> users=new LinkedList<>();
     @BeforeEach
     void setupTestData() throws Exception {
-        ac = new Ac();
-        ac.setWindSpeed(2);
-        ac.setTemp(24);
-        ac.setRoom(UUID.randomUUID().toString().replace("-", "").substring(0, 4));
-        ac.setAcState(Ac.AcState.CLOSE);
+        ac= RandomData.getRandomAc();
         acService.addAc(ac);
-        user = new User(UUID.randomUUID().toString().replace("-", "").substring(0, 10), "password1", ac.getAcId());
+        user=RandomData.getRandomUser(ac.getAcId());
         userService.createUser(user);
         thread=new Thread(scheduleService);
-        //scheduleService.openAc(ac.getAcId(), user.getUserId());
         thread.start();
     }
     @AfterEach
     void deleteTestData() throws Exception {
         userService.deleteUser(user.getUserId());
         acService.deleteAc(ac.getAcId());
-        thread.join(5000);
+        thread.join(1000);
     }
 
     @Test
-    void start() throws InterruptedException {}
+    void start() throws Exception {
+        System.out.println("SCHEDULE_TEST_STARE------------------------------------------------------------");
+        for(int i=0;i<10;i++){
+            Ac acTemp=RandomData.getRandomAc();
+            acs.add(acTemp);
+            acService.addAc(acTemp);
+            User userTemp=RandomData.getRandomUser(acTemp.getAcId());
+            userService.createUser(userTemp);
+        }
+        for(int i=0;i<10;i++){
+            Ac ac1 = acs.get(i);
+            System.out.println("Open ac "+ac1.getAcId());
+            scheduleService.openAc(ac1.getAcId(),ac1.getWindSpeed(),GlobalConfig.SYSTEM_ID);
+            int randomInt = RandomData.getRandomInt(0, i);
+            Ac ac2 = acs.get(randomInt);
+            int randomSpeed=RandomData.getRandomInt(0,4);
+            ac2.setWindSpeed(randomSpeed);
+            System.out.println("Change ac "+ac2.getAcId()+" new speed "+ac2.getWindSpeed());
+            scheduleService.changeAcWindSpeed(ac2.getAcId(), ac2.getWindSpeed(), GlobalConfig.SYSTEM_ID);
+        }
+        System.out.println("SCHEDULE_TEST_END------------------------------------------------------------");
+
+    }
 
 
     @Test
