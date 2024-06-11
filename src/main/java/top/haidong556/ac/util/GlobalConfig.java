@@ -14,14 +14,14 @@ public class GlobalConfig {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        ROOM_DEFAULT_TEMP = Integer.parseInt(property.getProperty("ROOM_DEFAULT_TEMP"),25);
-        PER_SECOND_MILLISECOND = Integer.parseInt(property.getProperty("PER_SECOND_MILLISECOND"),1000);  // 固定值，无需从 properties 文件读取
-        AC_DEFAULT_WIND_SPEED = Integer.parseInt(property.getProperty("AC_DEFAULT_WIND_SPEED"),2);
-        AC_DEFAULT_TEMP = Integer.parseInt(property.getProperty("AC_DEFAULT_TEMP"),15);
-        ADMIN_ID = Integer.parseInt(property.getProperty("ADMIN_ID"),3);
-        WAITER_ID = Integer.parseInt(property.getProperty("WAITER_ID"),2);
-        MANAGER_ID = Integer.parseInt(property.getProperty("MANAGER_ID"),4);
-        SYSTEM_ID = Integer.parseInt(property.getProperty("SYSTEM_ID"),1);
+        ROOM_DEFAULT_TEMP = Integer.parseInt(property.getProperty("ROOM_DEFAULT_TEMP","25"));
+        PER_SECOND_MILLISECOND = Integer.parseInt(property.getProperty("PER_SECOND_MILLISECOND","1000"));  // 固定值，无需从 properties 文件读取
+        AC_DEFAULT_WIND_SPEED = Integer.parseInt(property.getProperty("AC_DEFAULT_WIND_SPEED","2"));
+        AC_DEFAULT_TEMP = Integer.parseInt(property.getProperty("AC_DEFAULT_TEMP","15"));
+        ADMIN_ID = Integer.parseInt(property.getProperty("ADMIN_ID","3"));
+        WAITER_ID = Integer.parseInt(property.getProperty("WAITER_ID","2"));
+        MANAGER_ID = Integer.parseInt(property.getProperty("MANAGER_ID","4"));
+        SYSTEM_ID = Integer.parseInt(property.getProperty("SYSTEM_ID","1"));
         AC_COST_PER_SECOND = Float.parseFloat(property.getProperty("AC_COST_PER_SECOND","0.1"));
         INIT_AC = Boolean.parseBoolean(property.getProperty("INIT_AC","false"));
         SHOW_REPOSITORY_OPERATION_MESSAGE = Boolean.parseBoolean(property.getProperty("SHOW_REPOSITORY_OPERATION_MESSAGE","false"));
