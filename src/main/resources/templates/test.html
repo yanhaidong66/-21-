@@ -79,7 +79,7 @@
 
         .table-container {
             width: 90%;
-            height: 80%;
+            height: 100%;
             overflow-y: auto; /* 横向滚动 */
         }
 
@@ -112,7 +112,7 @@
 
         th, td {
             border: 1px solid #ddd; /* 表格边框 */
-            width: 15%;
+            width: 20%;
         }
 
         th {
@@ -120,82 +120,65 @@
             top: 0; /* 与顶部对齐 */
             z-index: 1; /* 确保表头在顶部 */
         }
-
-        .pagination {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .pagination button {
-            padding: 10px;
-            margin: 5px;
-            background-color: #333;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        .pagination button:disabled {
-            background-color: #ddd;
-            cursor: not-allowed;
-        }
-
-        .pagination button:hover:not(:disabled) {
-            background-color: #575757;
-        }
     </style>
 </head>
 <body>
 <div class="sidebar">
     <div class="username">
         <!-- 使用Thymeleaf填充用户名 -->
-        <p>Manager</p>
+        <p th:text="${waiter.username}">用户名</p>
     </div>
-
+    <div class="nav-links">
+        <a  th:href="@{/waiter/checkin}" >入住</a>
+        <a  th:href="@{/waiter/checkout}" class="active">结账</a>
+        <a  th:href="@{/waiter/allUser}" >查看所有入住用户</a>
+    </div>
     <div class="logout">
-        <button>登出</button>
+        <button >登出</button>
     </div>
 </div>
 <div class="content">
-    <section id="all-users">
-        <h2>订单</h2>
+    <section id="opDetailsShow">
+        <h1>用户结账</h1>
+        <div>
+            <form action="" method="">
+                <div>
+                    <label for="username">用户名:</label>
+                    <input type="text" id="username" name="username" required>
+                    <button type="submit">结账</button>
+                </div>
+            </form>
+        </div>
+        <h1>cost: <span th:text="${cost}">0</span></h1>
         <div class="table-container">
             <table>
                 <thead>
                 <tr>
-                    <th>单号</th>
-                    <th>单状态</th>
-                    <th>创建时间</th>
-                    <th>用户ID</th>
-                    <th>空调ID</th>
-                    <th>金额</th>
+                    <th >操作ID</th>
+                    <th >操作类型</th>
+                    <th >空调号</th>
+                    <th >空调温度</th>
+                    <th >空调风速</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="bill : ${billItems}">
-                    <td th:text="${bill.billId}">单号</td>
-                    <td th:text="${bill.state}">单状态</td>
-                    <td th:text="${bill.createTime}">创建时间</td>
-                    <td th:text="${bill.userId}">用户ID</td>
-                    <td th:text="${bill.acId}">空调ID</td>
-                    <td th:text="${bill.cost}">金额</td>
+                <tr th:each="op : ${opDetails}">
+                    <td th:text="${op.getOperationId()}">操作ID</td>
+                    <td th:text="${op.getType()}">操作类型</td>
+                    <td th:text="${op.getAcId()}">空调号</td>
+                    <td th:text="${op.getAcTemp()}">空调温度</td>
+                    <td th:text="${op.getAcWindSpeed()}">空调风速</td>
                 </tr>
                 </tbody>
             </table>
         </div>
-<!--        <div class="pagination">-->
-<!--            <button id="prev-page" disabled>上一页</button>-->
-<!--            <span id="page-info">Page 1</span>-->
-<!--            <button id="next-page">下一页</button>-->
-<!--        </div>-->
     </section>
 </div>
+</body>
 <script>
-
-
     document.addEventListener("DOMContentLoaded", function() {
         // 获取登出按钮
-        var logoutButton = document.querySelector('.logout');
+        var logoutButton = document.querySelector('.logout button');
 
         // 给登出按钮添加点击事件监听器
         logoutButton.addEventListener("click", function(event) {
@@ -211,8 +194,5 @@
             form.submit();
         });
     });
-
 </script>
-</body>
 </html>
-

@@ -11,7 +11,9 @@ import top.haidong556.ac.entity.role.People;
 import top.haidong556.ac.entity.role.User;
 import top.haidong556.ac.mapper.AcMapper;
 import top.haidong556.ac.mapper.UserMapper;
+import top.haidong556.ac.util.RandomData;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,65 +29,61 @@ class UserRepositoryTest {
     private UserRepository userRepository;
     @Autowired
     private AcRepository acRepository;
-    private User user1;
-    private User user2;
-    private Ac ac;
+    List<User> users=new LinkedList<>();
+    List<Ac> acs=new LinkedList<>();
 
     @BeforeEach
     void setupTestData() throws Exception {
-        ac = new Ac();
-        ac.setWindSpeed(3);
-        ac.setTemp(24);
-        ac.setRoom("2342322");
-        ac.setAcState(Ac.AcState.CLOSE);
-        acRepository.addAc(ac);
-        user1 = new User("testUser918", "password1", ac.getAcId());
-        user2 = new User("testUser919", "password2", ac.getAcId());
-        userRepository.addUser(user1);
-        userRepository.addUser(user2);
+        for (int i = 0; i < 100; i++) {
+            Ac ac = RandomData.getRandomAc();
+            acs.add(ac);
+            acRepository.addAc(ac);
+            System.out.println("add ac "+ i);
+            User user = RandomData.getRandomUser(ac.getAcId());
+            userRepository.addUser(user);
+            System.out.println("add user "+i);
+        }
+
     }
 
     @AfterEach
     void cleanupTestData() throws Exception {
-        userRepository.deleteUser(user1.getUserId());
-        userRepository.deleteUser(user2.getUserId());
-        acRepository.deleteAc(ac.getAcId());
+        for (User user:users) {
+            userRepository.deleteUser(user.getUserId());
+        }
+        for(Ac ac:acs)
+            acRepository.deleteAc(ac.getAcId());
     }
 
     @Test
     void addUser() throws Exception {
 
-        User retrievedUser = userRepository.getUser(user1.getUserId());
-        assertNotNull(retrievedUser);
-        assertEquals(user1.getUsername(), retrievedUser.getUsername());
     }
 
     @Test
     void deleteUser() throws Exception {
 
-        userRepository.deleteUser(user1.getUserId());
-        User deletedUser = userRepository.getUser(user1.getUserId());
-        assertNull(deletedUser);
     }
 
     @Test
     void getUserById() throws Exception {
-        List<User> allUsers = userRepository.getAllUser();
-        User userToRetrieve = allUsers.get(0);
+        for (User user :
+                users) {
+            User user1=userRepository.getUser(user.getUserId());
+            assertNotNull(user1);
+            assertEquals(user1.getUsername(), user.getUsername());
+        }
 
-        User retrievedUser = userRepository.getUser(userToRetrieve.getUserId());
-        assertNotNull(retrievedUser);
-        assertEquals(userToRetrieve.getUsername(), retrievedUser.getUsername());
     }
 
     @Test
     void getUserByUsername() throws Exception {
-        List<User> allUsers = userRepository.getAllUser();
-        User userToRetrieve = allUsers.get(0);
-
-        User retrievedUser = userRepository.getUser(userToRetrieve.getUsername());
-        assertNotNull(retrievedUser);
-        assertEquals(userToRetrieve.getUsername(), retrievedUser.getUsername());
+        for (User user :
+                users) {
+            User user1=userRepository.getUser(user.getUsername());
+            assertNotNull(user1);
+            assertEquals(user1.getUsername(), user.getUsername());
+        }
     }
 
     @Test

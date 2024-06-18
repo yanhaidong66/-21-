@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -48,7 +49,7 @@ public class ScheduleThreadTest {
     void deleteTestData() throws Exception {
         userService.deleteUser(user.getUserId());
         acService.deleteAc(ac.getAcId());
-//        thread.join(3000);
+        thread.join(5000);
     }
 
 
@@ -61,6 +62,7 @@ public class ScheduleThreadTest {
             acService.addAc(acTemp);
             User userTemp=RandomData.getRandomUser(acTemp.getAcId());
             userService.createUser(userTemp);
+            System.out.println(i);
         }
         for(int i=0;i<10;i++){
             Ac ac1 = acs.get(RandomData.getRandomInt(0,i));
@@ -72,6 +74,8 @@ public class ScheduleThreadTest {
             ac2.setWindSpeed(randomSpeed);
             System.out.println("----test class:Change ac "+ac2.getAcId()+" new speed "+ac2.getWindSpeed());
             scheduleService.changeAcWindSpeed(ac2.getAcId(), ac2.getWindSpeed(), GlobalConfig.SYSTEM_ID);
+            scheduleService.printQueue();
+            sleep(3000);
         }
         System.out.println("SCHEDULE_TEST_END------------------------------------------------------------");
 

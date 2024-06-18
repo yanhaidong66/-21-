@@ -14,4 +14,5 @@ public abstract class ScheduleService implements Runnable {
     public abstract void changeAcWindSpeed(int acId, int newWindSpeed,int userId)throws Exception;
     public abstract void closeAc(int acId,int userId)throws Exception;
     public abstract void openAc(int acId, int windSpeed, int userId) throws Exception;
+    public abstract void printQueue() throws Exception;
 }

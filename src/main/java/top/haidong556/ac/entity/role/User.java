@@ -18,7 +18,6 @@ public class User extends People {
     public User(String username, String password) {
         super(RoleType.USER, username, password);
     }
-
     public User( String username, String password, int acId) {
         super(RoleType.USER, username, password);
         this.acId = acId;

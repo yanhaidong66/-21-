@@ -1,3 +1,4 @@
+set global transaction isolation level REPEATABLE READ;
 drop database db_ac;
 create database db_ac;
 use db_ac;

@@ -17,7 +17,7 @@ public class GlobalConfig {
         ROOM_DEFAULT_TEMP = Integer.parseInt(property.getProperty("ROOM_DEFAULT_TEMP","25"));
         PER_SECOND_MILLISECOND = Integer.parseInt(property.getProperty("PER_SECOND_MILLISECOND","1000"));  // 固定值，无需从 properties 文件读取
         AC_DEFAULT_WIND_SPEED = Integer.parseInt(property.getProperty("AC_DEFAULT_WIND_SPEED","2"));
-        AC_DEFAULT_TEMP = Integer.parseInt(property.getProperty("AC_DEFAULT_TEMP","15"));
+        AC_DEFAULT_TEMP = Integer.parseInt(property.getProperty("AC_DEFAULT_TEMP","20"));
         ADMIN_ID = Integer.parseInt(property.getProperty("ADMIN_ID","3"));
         WAITER_ID = Integer.parseInt(property.getProperty("WAITER_ID","2"));
         MANAGER_ID = Integer.parseInt(property.getProperty("MANAGER_ID","4"));
@@ -25,6 +25,10 @@ public class GlobalConfig {
         AC_COST_PER_SECOND = Float.parseFloat(property.getProperty("AC_COST_PER_SECOND","0.1"));
         INIT_AC = Boolean.parseBoolean(property.getProperty("INIT_AC","false"));
         SHOW_REPOSITORY_OPERATION_MESSAGE = Boolean.parseBoolean(property.getProperty("SHOW_REPOSITORY_OPERATION_MESSAGE","false"));
+        AC_MAX_TEMP=Integer.parseInt(property.getProperty("AC_MAX_TEMP","26"));
+        AC_MIN_TEMP=Integer.parseInt(property.getProperty("AC_MIN_TEMP","17"));
+        AC_MAX_WIND_SPEED=Integer.parseInt(property.getProperty("AC_MAX_WIND_SPEED","3"));
+        AC_MIN_WIND_SPEED=Integer.parseInt(property.getProperty("AC_MIN_WIND_SPEED","1"));
     }
     public static final int ROOM_DEFAULT_TEMP;
     public static final int PER_SECOND_MILLISECOND;
@@ -37,4 +41,8 @@ public class GlobalConfig {
     public static final float AC_COST_PER_SECOND;
     public static final boolean INIT_AC;
     public static final boolean SHOW_REPOSITORY_OPERATION_MESSAGE;
+    public static final int  AC_MAX_TEMP;
+    public static final int AC_MIN_TEMP;
+    public static final int AC_MIN_WIND_SPEED;
+    public static final int AC_MAX_WIND_SPEED;
 }

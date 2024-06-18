@@ -9,6 +9,8 @@ import top.haidong556.ac.entity.ac.Ac;
 import top.haidong556.ac.entity.role.User;
 import top.haidong556.ac.util.RandomData;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 import static java.lang.Thread.sleep;
@@ -54,7 +56,9 @@ class AcServiceTest {
 
     @Test
     void changeAcWindSpeed() throws Exception {
-        acService.changeAcWindSpeed(ac.getAcId(), ac.getWindSpeed()+1, user.getUserId());
+        for (int i = 0; i < 1000; i++) {
+            acService.changeAcWindSpeed(ac.getAcId(), ac.getWindSpeed()+1, user.getUserId());
+        }
         Ac acState = acService.getAcState(ac.getAcId());
         assertEquals(ac.getWindSpeed()+1, acState.getWindSpeed());
     }
@@ -71,6 +75,22 @@ class AcServiceTest {
         acService.openAc(ac.getAcId(),user.getUserId());
         Ac acState = acService.getAcState(ac.getAcId());
         assertEquals(acState.getAcState(), Ac.AcState.OPEN);
+    }
+    @Test
+    void testAddAc() throws Exception {
+        List<Ac> acs=new LinkedList<>();
+        for(int i=0;i<100;i++){
+            Ac acTemp=RandomData.getRandomAc();
+            acs.add(acTemp);
+            acService.addAc(acTemp);
+            User userTemp=RandomData.getRandomUser(acTemp.getAcId());
+            userService.createUser(userTemp);
+            System.out.println(i);
+        }
+        for(int i=0;i<100;i++){
+            Ac ac1 = acs.get(i);
+            acService.deleteAc(ac1.getAcId());
+        }
     }
 
     @Test
@@ -101,4 +121,6 @@ class AcServiceTest {
     @Test
     void changeRoomTemp() {
     }
+
+
 }

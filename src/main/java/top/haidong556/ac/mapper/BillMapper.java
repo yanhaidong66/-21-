@@ -11,7 +11,11 @@ import java.util.List;
 @Mapper
 public interface BillMapper {
 
-    @Select("SELECT bill_id AS billId,bill_cost AS cost, bill_state AS state, bill_create_time AS createTime, bill_user_id AS userId, bill_ac_id AS acId FROM t_bill WHERE bill_create_time BETWEEN #{startTime} AND #{endTime}")
+    @Select("SELECT " +
+            "bill_id AS billId,bill_cost AS cost, bill_state AS state, bill_create_time AS createTime, bill_user_id AS userId, bill_ac_id AS acId " +
+            "FROM t_bill " +
+            "WHERE bill_create_time BETWEEN #{startTime} AND #{endTime}" +
+            "ORDER BY createTime DESC")
     @Results({
             @Result(property = "state", column = "state", javaType = BillState.class, typeHandler = BillStateHandler.class)
     })

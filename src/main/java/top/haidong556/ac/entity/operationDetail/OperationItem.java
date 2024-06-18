@@ -94,4 +94,5 @@ public class OperationItem {
     private int acId;
     private int acTemp;
     private int acWindSpeed;
+
 }

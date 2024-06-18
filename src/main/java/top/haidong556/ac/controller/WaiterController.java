@@ -13,8 +13,10 @@ import top.haidong556.ac.security.MyUserDetailsServiceImpl;
 import top.haidong556.ac.service.AcService;
 import top.haidong556.ac.service.BillService;
 import top.haidong556.ac.service.UserService;
+import top.haidong556.ac.util.GlobalConfig;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -23,14 +25,12 @@ public class WaiterController {
     private UserService userService;
     private AcService acService;
     private MyUserDetailsServiceImpl userDetailsService;
-    private BillService billService;
 
     @Autowired
-    public WaiterController(UserService userService,AcService acService,MyUserDetailsServiceImpl userDetailsService,BillService billService){
+    public WaiterController(UserService userService,AcService acService,MyUserDetailsServiceImpl userDetailsService){
         this.userService=userService;
         this.acService=acService;
         this.userDetailsService=userDetailsService;
-        this.billService=billService;
     }
 
     @GetMapping("/checkin")
@@ -45,17 +45,19 @@ public class WaiterController {
         try {
             User user = new User(username, password);
             Ac ac = acService.getAcState(room);
+            if(ac==null){
+                Ac newAc=new Ac();
+                newAc.setRoom(room);
+                newAc.setTemp(GlobalConfig.AC_DEFAULT_TEMP);
+                newAc.setWindSpeed(GlobalConfig.AC_DEFAULT_WIND_SPEED);
+                newAc.setAcState(Ac.AcState.CLOSE);
+                newAc.setRoomTemp(GlobalConfig.ROOM_DEFAULT_TEMP);
+                acService.addAc(newAc);
+                ac=newAc;
+            }
             user.setAcId(ac.getAcId());
             userService.createUser(user);
-            System.out.println(user);
-            BillItem billItem = new BillItem.Builder()
-                    .setAcId(ac.getAcId())
-                    .setCreateTime(LocalDateTime.now())
-                    .setUserId(user.getUserId())
-                    .setState(BillItem.BillState.NOT_PAY)
-                    .setCost(0)
-                    .build();
-            billService.createBillItem(billItem);
+
             ModelAndView modelAndView = new ModelAndView("waiter-checkin");
             modelAndView.addObject("error",false);
             Waiter waiter = userDetailsService.currentWaiter();
@@ -70,21 +72,24 @@ public class WaiterController {
         }
     }
     @GetMapping("/checkout")
-    public ModelAndView checkoutPage(String username)throws Exception{
+    public ModelAndView checkoutPage()throws Exception{
+        ModelAndView modelAndView=new ModelAndView("waiter-checkout");
+        float cost=0f;
+        List<OperationItem> acDetailTableByUserId = new LinkedList<>();
+        Waiter waiter = userDetailsService.currentWaiter();
+        modelAndView.addObject("cost","init");
+        modelAndView.addObject("waiter",waiter);
+        modelAndView.addObject("opDetails",acDetailTableByUserId);
+        return modelAndView;
+    }
+    @PostMapping("/checkout")
+    public ModelAndView checkout(String username)throws Exception{
         ModelAndView modelAndView=new ModelAndView("waiter-checkout");
         User user = userService.getUser(username);
         Ac ac=acService.getAcState(user.getAcId());
-        float cost = billService.getCost(user.getUserId());
-        BillItem billItem = new BillItem.Builder()
-                .setAcId(ac.getAcId())
-                .setCreateTime(LocalDateTime.now())
-                .setUserId(user.getUserId())
-                .setState(BillItem.BillState.HAVE_PAY)
-                .setCost(cost)
-                .build();
-        billService.createBillItem(billItem);
         List<OperationItem> acDetailTableByUserId = acService.getAcDetailTableByUserId(user.getUserId());
         Waiter waiter = userDetailsService.currentWaiter();
+        float cost= userService.deleteUser(user.getUserId());
         modelAndView.addObject("cost",cost);
         modelAndView.addObject("waiter",waiter);
         modelAndView.addObject("opDetails",acDetailTableByUserId);

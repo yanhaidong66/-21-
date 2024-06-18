@@ -1,17 +1,12 @@
 package top.haidong556.ac.service;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import top.haidong556.ac.annotations.RangeValidation;
 import top.haidong556.ac.entity.ac.Ac;
 import top.haidong556.ac.entity.operationDetail.OperationItem;
-import top.haidong556.ac.entity.role.People;
-import top.haidong556.ac.entity.role.User;
-import top.haidong556.ac.entity.role.UserDetailsAdapter;
 import top.haidong556.ac.repository.AcOperationRepository;
 import top.haidong556.ac.repository.AcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import top.haidong556.ac.security.MyUserDetailsServiceImpl;
 import top.haidong556.ac.util.GlobalConfig;
 
 import java.time.LocalDateTime;
@@ -19,8 +14,8 @@ import java.util.List;
 
 @Service
 public class AcService {
-    private final AcRepository acRepository;
-    private final AcOperationRepository acOperationRepository;
+    private  AcRepository acRepository;
+    private  AcOperationRepository acOperationRepository;
 
     @Autowired
     public AcService(AcRepository acRepository, AcOperationRepository acOperationRepository) {
@@ -34,7 +29,7 @@ public class AcService {
             System.out.println("添加空调设备："+ac);
     }
 
-    public void changeAcTemp(int acId, int newTemp,int userId)throws Exception {
+    public void changeAcTemp(int acId, @RangeValidation(min = "AC_MIN_TEMP",max="AC_MAX_TEMP",msg = "server层：修改ac温度超出范围") int newTemp, int userId)throws Exception {
         acRepository.changeAcTemp(acId, newTemp);
         if(GlobalConfig.SHOW_REPOSITORY_OPERATION_MESSAGE==true)
             System.out.println("修改空调id="+acId+"温度为"+newTemp);
@@ -50,7 +45,7 @@ public class AcService {
         acOperationRepository.createOperationItem(operationItem);
     }
 
-    public void changeAcWindSpeed(int acId, int newWindSpeed,int userId)throws Exception {
+    public void changeAcWindSpeed(int acId,@RangeValidation(min = "AC_MIN_WIND_SPEED",max="AC_MAX_WIND_SPEED",msg = "server层：修改ac风速超出范围") int newWindSpeed, int userId)throws Exception {
         acRepository.changeAcWindSpeed(acId, newWindSpeed);
         Ac acState = acRepository.getAcState(acId);
         OperationItem operationItem=new OperationItem.Builder()

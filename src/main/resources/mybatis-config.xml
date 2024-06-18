@@ -15,12 +15,9 @@
                 <property name="username" value="root"/>
                 <property name="password" value="000227"/>
             </dataSource>
-
         </environment>
-
     </environments>
     <mappers>
-        <package name="top.haidong556.ac.mapper"></package>
+        <package name="top.haidong556.ac.mapper"/>
     </mappers>
-
 </configuration>

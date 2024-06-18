@@ -73,9 +73,7 @@
             overflow: auto; /* 确保内容区域可以滚动 */
         }
 
-        .active {
-            background-color: #555;
-        }
+
 
         .table-container {
             width: 90%;
@@ -121,28 +119,7 @@
             z-index: 1; /* 确保表头在顶部 */
         }
 
-        .pagination {
-            text-align: center;
-            margin-top: 20px;
-        }
 
-        .pagination button {
-            padding: 10px;
-            margin: 5px;
-            background-color: #333;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        .pagination button:disabled {
-            background-color: #ddd;
-            cursor: not-allowed;
-        }
-
-        .pagination button:hover:not(:disabled) {
-            background-color: #575757;
-        }
     </style>
 </head>
 <body>
@@ -159,8 +136,40 @@
 <div class="content">
     <section id="all-users">
         <h2>空调</h2>
-        <button onclick="openChangeAcWindow()">修改空调状态</button>
-        <button onclick="openAddAcWindow()">添加空调</button>
+        <div class="top_container">
+            <p>
+                <strong>添加空调：</strong>
+                <span>房间号：</span>
+                <input type="text" id="roomInput">
+                <button onclick="addAc()">添加</button>
+            </p>
+            <p>
+            <strong>修改空调状态：</strong>
+                <span>空调ID：</span>
+                <input type="number" id="acIdStateInput">
+            <select id="acStateInput">
+                <option value="open">打开</option>
+                <option value="close">关闭</option>
+            </select>
+
+            <button onclick="changeAcState()">修改</button>
+            </p>
+            <p><strong>修改风速:</strong>
+                <span>空调ID：</span>
+                <input type="number" id="acIdWindSpeedInput">
+                <span>风速：</span>
+                <input type="number" id="windSpeedInput">
+                <button onclick="changeAcWindSpeed()">修改</button>
+            </p>
+            <p><strong>修改温度:</strong>
+                <span>空调ID：</span>
+                <input type="number" id="acIdTempInput">
+                <span>温度</span>
+                <input type="number" id="tempInput">
+                <button onclick="changeAcTemp()">修改</button>
+            </p>
+        </div>
+
         <div class="table-container">
             <table>
                 <thead>
@@ -190,11 +199,9 @@
 </div>
 </body>
 <script>
-
-
     document.addEventListener("DOMContentLoaded", function() {
         // 获取登出按钮
-        var logoutButton = document.querySelector('.logout');
+        var logoutButton = document.querySelector('.logout button');
 
         // 给登出按钮添加点击事件监听器
         logoutButton.addEventListener("click", function(event) {
@@ -210,75 +217,88 @@
             form.submit();
         });
     });
-
-
-
-    function openChangeAcWindow() {
-        const newWindow = window.open("", "_blank", "width=600,height=400");
-        const newWindowContent = `
-    <h2>Change AC Properties</h2>
-    <label for="acId">AC ID:</label>
-    <input type="number" id="acId"><br><br>
-
-    <label for="acStatus">AC Status:</label>
-    <select id="acStatus">
-        <option value="open">Open</option>
-        <option value="close">Close</option>
-    </select>   <button onclick="updateAcStatus()">Update ac Status</button><br><br>
-
-    <label for="newTemp">New Temperature:</label>
-    <input type="number" id="newTemp" value="25">   <button onclick="updateAcTemp()">Update ac temp</button><br><br>
-
-    <label for="newWindSpeed">New Wind Speed:</label>
-    <input type="number" id="newWindSpeed" value="2">  <button onclick="updateAcWindSpeed()">Update ac windSpeed</button><br><br>
-`;
-        newWindow.document.body.innerHTML = newWindowContent;
-
-        newWindow.updateAcStatus = function() {
-            var acId = newWindow.document.getElementById("acId").value;
-            var acStatus = newWindow.document.getElementById("acStatus").value;
-            if (acStatus === "open") {
-                fetch(`/admin/open?acId=${acId}`).then(() => console.log("Change status successful")).catch(res => console.error(res));
-            } else {
-                fetch(`/admin/close?acId=${acId}`).then(() => console.log("Change status successful")).catch(res => console.error(res));
+    function addAc() {
+        var room = document.getElementById("roomInput").value;
+        fetch(`/admin/addAc?room=${room}`, {
+            method: 'GET'
+        }).then(response => {
+            if (response.ok) {
+                return response.text(); // 返回文本内容
             }
-        }
-
-        newWindow.updateAcTemp = function() {
-            var newTemp = newWindow.document.getElementById("newTemp").value;
-            var acId = newWindow.document.getElementById("acId").value;
-            fetch(`/admin/temp?acId=${acId}&newTemp=${newTemp}`)
-                .then(() => console.log("Update Temperature successful"))
-                .catch(err => console.error(err));
-        }
-
-        newWindow.updateAcWindSpeed = function() {
-            var newWindSpeed = newWindow.document.getElementById("newWindSpeed").value;
-            var acId = newWindow.document.getElementById("acId").value;
-            fetch(`/admin/windSpeed?acId=${acId}&newWindSpeed=${newWindSpeed}`)
-                .then(() => console.log("Update Wind Speed successful"))
-                .catch(err => console.error(err));
-        }
+            throw new Error('Failed to change AC temperature');
+        }).then(html => {
+            // 替换当前页面
+            document.open();
+            document.write(html);
+            document.close();
+        }).catch(error => {
+            console.error('Error:', error);
+        });
     }
-    function openAddAcWindow(){
-        const newWindow = window.open("", "_blank", "width=600,height=400");
-        const newWindowContent = `
-    <h2>添加空调设备</h2>
+    function changeAcTemp() {
+        var acId = document.getElementById("acIdTempInput").value;
+        acId = parseInt(acId);
+        var temp = document.getElementById("tempInput").value;
+        fetch(`/admin/temp?newTemp=${temp}&acId=${acId}`, {
+            method: 'GET'
+        }).then(response => {
+            if (response.ok) {
+                return response.text(); // 返回文本内容
+            }
+            throw new Error('Failed to change AC temperature');
+        }).then(html => {
+            // 替换当前页面
+            document.open();
+            document.write(html);
+            document.close();
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    }
 
-    <label for="room">Room:</label>
-    <input type="text" id="room" value="roomName">   <button onclick="addAc()">添加空调</button><br><br>
-`;
-        newWindow.document.body.innerHTML = newWindowContent;
+    function changeAcWindSpeed() {
+        var acId = document.getElementById("acIdWindSpeedInput").value;
+        acId = parseInt(acId);
+        var windSpeed = document.getElementById("windSpeedInput").value;
+        windSpeed = parseInt(windSpeed);
+        fetch(`/admin/windSpeed?newWindSpeed=${windSpeed}&acId=${acId}`, {
+            method: 'GET'
+        }).then(response => {
+            if (response.ok) {
+                return response.text(); // 返回文本内容
+            }
+            throw new Error('Failed to change AC wind speed');
+        }).then(html => {
+            // 替换当前页面
+            document.open();
+            document.write(html);
+            document.close();
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    }
 
-        newWindow.addAc = function() {
-            var acRoom = newWindow.document.getElementById("room").value;
-            fetch(`/admin/addAc?room=${acRoom}`).then(() => console.log("add ac successful")).catch(res => console.error(res));
+    function changeAcState() {
+        var acId = document.getElementById("acIdStateInput").value;
+        acId = parseInt(acId);
+        var state = document.getElementById("acStateInput").value;
+        var endpoint = state === 'open' ? `/admin/open?acId=${acId}` : `/admin/close?acId=${acId}`;
 
-        }
-
-
-
-
+        fetch(endpoint, {
+            method: 'GET'
+        }).then(response => {
+            if (response.ok) {
+                return response.text(); // Return text content
+            }
+            throw new Error('Failed to change AC state');
+        }).then(html => {
+            // Replace current page content
+            document.open();
+            document.write(html);
+            document.close();
+        }).catch(error => {
+            console.error('Error:', error);
+        });
     }
 </script>
 

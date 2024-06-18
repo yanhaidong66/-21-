@@ -31,7 +31,8 @@ public class UserService {
         billService.createBillItem(billItem);
     }
 
-    public void deleteUser(int userId)throws Exception{
+    public float deleteUser(int userId)throws Exception{
+        float cost= billService.getCost(userId);
         User user = userRepository.getUser(userId);
         BillItem billItem=new BillItem.Builder()
                 .setUserId(userId)
@@ -42,7 +43,7 @@ public class UserService {
                 .build();
         billService.createBillItem(billItem);
         userRepository.deleteUser(userId);
-
+        return cost;
     }
     public People getUser(int userId)throws Exception{
         return userRepository.getUser(userId);

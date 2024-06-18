@@ -42,8 +42,10 @@ public class AdminController {
     @GetMapping("/temp")
     public ModelAndView changeAcTemp(int acId, int newTemp)throws Exception{
         ModelAndView modelAndView=new ModelAndView();
-        modelAndView.setViewName("login");
+        modelAndView.setViewName("admin");
         acService.changeAcTemp(acId,newTemp, GlobalConfig.ADMIN_ID);
+        List<Ac> allAcState = acService.getAllAcState();
+        modelAndView.addObject("allAc",allAcState);
         return modelAndView;
     }
 

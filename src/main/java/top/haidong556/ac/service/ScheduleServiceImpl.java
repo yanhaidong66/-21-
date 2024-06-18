@@ -1,6 +1,7 @@
 package top.haidong556.ac.service;
 
 import jakarta.annotation.PostConstruct;
+import lombok.Data;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import top.haidong556.ac.entity.ac.Ac;
 import top.haidong556.ac.util.GlobalConfig;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -58,64 +60,76 @@ public class ScheduleServiceImpl extends ScheduleService  {
     public void run() {
         int perSecondMillisecond = GlobalConfig.PER_SECOND_MILLISECOND;
 
-        ArrayList<ServiceObject> beforeService = new ArrayList<>();
-        if (waitQueue.isEmpty())
-            return;
-        else if (waitQueue.size() + serviceQueue.size() <= capacity) {  //等待列表和服务列表小于上限，直接进行服务
-            for (ServiceObject temp : waitQueue) {
-                temp.startService();
-                try {
-                    acService.openAc(temp.getAcId(), temp.getUserid());
-                } catch (Exception e) {
-
-                }
-                serviceQueue.add(temp);
+        while(true) {
+            try {
+                Thread.sleep(6000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-            waitQueue.clear();
-            return;
-        }
 
-        while (!serviceQueue.isEmpty()) {     //将正在服务的倒序放入等待列表
-            ServiceObject temp = serviceQueue.remove(serviceQueue.size() - 1);
-            waitQueue.add(temp);
-            beforeService.add(temp);
-        }
+            System.out.println("running");
 
-        sortWait();     //优先级排序
+            ArrayList<ServiceObject> beforeService = new ArrayList<>();
+            if (waitQueue.isEmpty())
+                continue;
+            else if (waitQueue.size() + serviceQueue.size() <= capacity) {  //等待列表和服务列表小于上限，直接进行服务
+                for (ServiceObject temp : waitQueue) {
+                    temp.startService();
+                    try {
+                        acService.openAc(temp.getAcId(), temp.getUserid());
+                    } catch (Exception e) {
 
-        for (int i = 0; i < capacity && !waitQueue.isEmpty(); i++) {      //将等待列表中的一定个数放入服务列表
-            ServiceObject temp = waitQueue.remove(0);
-            if (beforeService.indexOf(temp) != -1) {
-                temp.startService();
-                try {
-                    acService.openAc(temp.getAcId(), temp.getUserid());
-                } catch (Exception e) {
-
+                    }
+                    serviceQueue.add(temp);
                 }
-                serviceQueue.add(0, temp);
-            } else {
-                temp.startService();
-                serviceQueue.add(temp);
+                waitQueue.clear();
+                continue;
             }
-        }
 
-        boolean needWrite;
-        for (ServiceObject temp : beforeService) {      //判断是否需要写数据库
-            needWrite = true;
-            for (ServiceObject temp2 : serviceQueue) {
-                if (temp == temp2) {
-                    needWrite = false;
-                    break;
-                }
+
+            while (!serviceQueue.isEmpty()) {     //将正在服务的倒序放入等待列表
+                ServiceObject temp = serviceQueue.remove(serviceQueue.size() - 1);
+                waitQueue.add(temp);
+                beforeService.add(temp);
             }
-            if (needWrite) {
-                //将temp写入数据库
-                try {
-                    acService.closeAc(temp.getAcId(), temp.getUserid());
-                } catch (Exception e) {
 
+            sortWait();     //优先级排序
+
+            for (int i = 0; i < capacity && !waitQueue.isEmpty(); i++) {      //将等待列表中的一定个数放入服务列表
+                ServiceObject temp = waitQueue.remove(0);
+                if (beforeService.indexOf(temp) != -1) {
+                    temp.startService();
+                    try {
+                        acService.openAc(temp.getAcId(), temp.getUserid());
+                    } catch (Exception e) {
+
+                    }
+                    serviceQueue.add(0, temp);
+                } else {
+                    temp.startService();
+                    serviceQueue.add(temp);
                 }
             }
+
+            boolean needWrite;
+            for (ServiceObject temp : beforeService) {      //判断是否需要写数据库
+                needWrite = true;
+                for (ServiceObject temp2 : serviceQueue) {
+                    if (temp == temp2) {
+                        needWrite = false;
+                        break;
+                    }
+                }
+                if (needWrite) {
+                    //将temp写入数据库
+                    try {
+                        acService.closeAc(temp.getAcId(), temp.getUserid());
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+
         }
     }
 
@@ -185,7 +199,7 @@ public class ScheduleServiceImpl extends ScheduleService  {
                 i++;
             }
         }
-        System.out.println("target temp of room" + acId + "changed to" + temp);
+        System.out.println("target temp of room " + acId + " changed to " + temp);
         acService.changeAcTemp(acId, temp, userId);
     }
 
@@ -198,7 +212,7 @@ public class ScheduleServiceImpl extends ScheduleService  {
                     t.setWindSpeed(speed);
                     serviceQueue.set(i, t);
                     //写数据库
-                    System.out.println("windspeed of room" + acId + "changed to" + speed);
+                    System.out.println("windspeed of room " + acId + " changed to " + speed);
                     break;
                 }
                 i++;
@@ -210,7 +224,7 @@ public class ScheduleServiceImpl extends ScheduleService  {
                 if (t.getAcId() == acId) {
                     t.setWindSpeed(speed);
                     waitQueue.set(i, t);
-                    System.out.println("windspeed of room" + acId + "changed to" + speed + "in waitqueue");
+                    System.out.println("windspeed of room " + acId + " changed to " + speed + " in waitqueue");
                     break;
                 }
                 i++;
@@ -232,7 +246,7 @@ public class ScheduleServiceImpl extends ScheduleService  {
                 toAdd.startService();
                 serviceQueue.add(toAdd);
                 acService.openAc(toAdd.getAcId(), userId);
-                System.out.println("service of room" + acId + " poweroff");
+                System.out.println("service of room " + acId + " poweroff");
             }
             i++;
         }
@@ -240,7 +254,7 @@ public class ScheduleServiceImpl extends ScheduleService  {
         for (ServiceObject t : waitQueue) {
             if (t.getAcId() == acId) {
                 waitQueue.remove(i);
-                System.out.println("service of room" + acId + " poweroff");
+                System.out.println("service of room " + acId + " poweroff");
             }
             i++;
         }
@@ -252,24 +266,55 @@ public class ScheduleServiceImpl extends ScheduleService  {
     public void openAc(int acId, int windSpeed, int userId) throws Exception {
         int i = findIndexByid(acId);
         if (i == -1) {
-            ServiceObject t = new ServiceObject(acId);
+            ServiceObject t = new ServiceObject(acId,windSpeed,userId);
             t.setWindSpeed(windSpeed);
             t.setUserid(userId);
             if (serviceQueue.size() < capacity) {
                 t.startService();
                 serviceQueue.add(t);
                 acService.openAc(t.getAcId(), userId);
-                System.out.println("service of room" + acId + "created");
+                System.out.println("service of room " + acId + " created");
                 return;
             }
             waitQueue.add(t);
-            System.out.println("service of room" + acId + "created");
+            System.out.println("service of room " + acId + " created");
             return;
         }
         System.out.println("service already existed");
     }
 
+    public  void printQueue() throws Exception{
+        System.out.print("service queue:");
+        for(ServiceObject t:serviceQueue){
+            System.out.print(t.getAcId()+" "+t.getWindSpeed()+";");
+        }
+        System.out.print("\nwait queue:");
+        for(ServiceObject t:waitQueue){
+            System.out.print(t.getAcId()+" "+t.getWindSpeed()+";");
+        }
+        System.out.print("\n");
+    }
 
+
+}
+@Data
+class ServiceObject {
+    private  int acId;
+    private  int windSpeed;
+    private LocalDateTime startTime;
+    private  int userid;
+    public ServiceObject(){}
+    public ServiceObject(int acId,int usrId,int windSpeed) throws Exception {
+        this.acId = acId;
+        this.windSpeed=windSpeed;
+        this.userid=usrId;
+
+    }
+
+    public  void startService(){
+        startTime=LocalDateTime.now();
+
+    }
 
 }
 

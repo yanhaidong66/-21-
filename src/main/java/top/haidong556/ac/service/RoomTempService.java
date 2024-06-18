@@ -11,11 +11,13 @@ import static java.lang.Thread.sleep;
 
 @Service
 public class RoomTempService implements Runnable{
-    private final int perSecond= GlobalConfig.PER_SECOND_MILLISECOND;
-    private final int DEFAULT_ROOM_TEMP=GlobalConfig.ROOM_DEFAULT_TEMP;
+    private  int perSecond= GlobalConfig.PER_SECOND_MILLISECOND;
+    private  int DEFAULT_ROOM_TEMP=GlobalConfig.ROOM_DEFAULT_TEMP;
     private AcService acService;
+    private ScheduleService scheduleService;
     @Autowired
-    public RoomTempService(AcService acService){
+    public RoomTempService(AcService acService,ScheduleService scheduleService){
+        this.scheduleService=scheduleService;
         this.acService=acService;
     }
 
@@ -45,7 +47,7 @@ public class RoomTempService implements Runnable{
                         if(roomTemp<=acTemp){
                             roomTemp=acTemp;
                             try {
-                                acService.closeAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
+                                scheduleService.closeAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
                             } catch (Exception e) {
 
                             }
@@ -56,14 +58,14 @@ public class RoomTempService implements Runnable{
                         if(roomTemp>=acTemp){
                             roomTemp=acTemp;
                             try {
-                                acService.closeAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
+                                scheduleService.closeAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
                             } catch (Exception e) {
 
                             }
                         }
                     }else{
                         try {
-                            acService.closeAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
+                            scheduleService.closeAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
                         } catch (Exception e) {
 
                         }
@@ -86,7 +88,7 @@ public class RoomTempService implements Runnable{
                     }
                     if(Math.abs(ac.getTemp()-roomTemp)>=1){
                         try {
-                            acService.openAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
+                            scheduleService.openAc(ac.getAcId(),GlobalConfig.AC_DEFAULT_WIND_SPEED,GlobalConfig.SYSTEM_ID);
                         } catch (Exception e) {
 
                         }
