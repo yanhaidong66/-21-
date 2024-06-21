@@ -2,11 +2,15 @@ package top.haidong556.ac.service;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import top.haidong556.ac.entity.ac.Ac;
 import top.haidong556.ac.util.GlobalConfig;
@@ -18,11 +22,11 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.PriorityBlockingQueue;
 
 @Service
+@Primary
+@EnableAspectJAutoProxy(proxyTargetClass = true)
+@Log4j2
 public class ScheduleServiceImpl extends ScheduleService  {
-    //无界阻塞优先级队列，线程安全
-//    private PriorityBlockingQueue<ServiceObject> waitQueue;
-//    private PriorityBlockingQueue<ServiceObject> serviceQueue;
-    //你用的队列线程不安全，并发会出问题
+
 
     private CopyOnWriteArrayList<ServiceObject> waitQueue = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<ServiceObject> serviceQueue = new CopyOnWriteArrayList<>();
@@ -46,28 +50,24 @@ public class ScheduleServiceImpl extends ScheduleService  {
         if(GlobalConfig.INIT_AC==false)
             return;
         List<Ac> allAcState = acService.getAllAcState();
-        System.out.println("INIT_AC_START_______________________________");
         for(Ac ac:allAcState){
             if(ac.getAcState()== Ac.AcState.OPEN){
                 openAc(ac.getAcId(),ac.getWindSpeed(), GlobalConfig.SYSTEM_ID);
-                System.out.println("初始化开启空调："+ac);
+                log.debug("初始化开启空调："+ac);
             }
         }
-        System.out.println("INIT_AC_END_____________________________");
+
     }
 
     @Override
     public void run() {
-        int perSecondMillisecond = GlobalConfig.PER_SECOND_MILLISECOND;
 
         while(true) {
             try {
-                Thread.sleep(6000);
+                Thread.sleep(GlobalConfig.PER_SECOND_MILLISECOND*GlobalConfig.SCHEDULE_INTERVAL_SECOND);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-
-            System.out.println("running");
 
             ArrayList<ServiceObject> beforeService = new ArrayList<>();
             if (waitQueue.isEmpty())
@@ -78,7 +78,7 @@ public class ScheduleServiceImpl extends ScheduleService  {
                     try {
                         acService.openAc(temp.getAcId(), temp.getUserid());
                     } catch (Exception e) {
-
+                        ;
                     }
                     serviceQueue.add(temp);
                 }
@@ -199,7 +199,7 @@ public class ScheduleServiceImpl extends ScheduleService  {
                 i++;
             }
         }
-        System.out.println("target temp of room " + acId + " changed to " + temp);
+        log.debug("target temp of room " + acId + " changed to " + temp);
         acService.changeAcTemp(acId, temp, userId);
     }
 
@@ -212,7 +212,7 @@ public class ScheduleServiceImpl extends ScheduleService  {
                     t.setWindSpeed(speed);
                     serviceQueue.set(i, t);
                     //写数据库
-                    System.out.println("windspeed of room " + acId + " changed to " + speed);
+                    log.debug("windspeed of room " + acId + " changed to " + speed);
                     break;
                 }
                 i++;
@@ -224,7 +224,7 @@ public class ScheduleServiceImpl extends ScheduleService  {
                 if (t.getAcId() == acId) {
                     t.setWindSpeed(speed);
                     waitQueue.set(i, t);
-                    System.out.println("windspeed of room " + acId + " changed to " + speed + " in waitqueue");
+                    log.debug("windspeed of room " + acId + " changed to " + speed + " in waitqueue");
                     break;
                 }
                 i++;
@@ -241,12 +241,14 @@ public class ScheduleServiceImpl extends ScheduleService  {
             if (t.getAcId() == acId) {
                 //写数据库
                 serviceQueue.remove(i);
-                sortWait();
-                ServiceObject toAdd = waitQueue.remove(0);
-                toAdd.startService();
-                serviceQueue.add(toAdd);
-                acService.openAc(toAdd.getAcId(), userId);
-                System.out.println("service of room " + acId + " poweroff");
+                if(!waitQueue.isEmpty()){
+                    sortWait();
+                    ServiceObject toAdd = waitQueue.remove(0);
+                    toAdd.startService();
+                    serviceQueue.add(toAdd);
+                    acService.openAc(toAdd.getAcId(), userId);
+                }
+                log.debug("service of room " + acId + " poweroff");
             }
             i++;
         }
@@ -254,7 +256,7 @@ public class ScheduleServiceImpl extends ScheduleService  {
         for (ServiceObject t : waitQueue) {
             if (t.getAcId() == acId) {
                 waitQueue.remove(i);
-                System.out.println("service of room " + acId + " poweroff");
+                log.debug("service of room " + acId + " poweroff");
             }
             i++;
         }
@@ -273,17 +275,16 @@ public class ScheduleServiceImpl extends ScheduleService  {
                 t.startService();
                 serviceQueue.add(t);
                 acService.openAc(t.getAcId(), userId);
-                System.out.println("service of room " + acId + " created");
+                log.debug("service of room " + acId + " created");
                 return;
             }
             waitQueue.add(t);
-            System.out.println("service of room " + acId + " created");
+            log.debug("service of room " + acId + " created");
             return;
         }
-        System.out.println("service already existed");
     }
 
-    public  void printQueue() throws Exception{
+    public  void printQueue() {
         System.out.print("service queue:");
         for(ServiceObject t:serviceQueue){
             System.out.print(t.getAcId()+" "+t.getWindSpeed()+";");

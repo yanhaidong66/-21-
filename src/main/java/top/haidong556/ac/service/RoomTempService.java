@@ -1,8 +1,11 @@
 package top.haidong556.ac.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.haidong556.ac.entity.ac.Ac;
+import top.haidong556.ac.entity.role.User;
+import top.haidong556.ac.exception.DataBaseException;
 import top.haidong556.ac.util.GlobalConfig;
 
 import java.util.List;
@@ -10,20 +13,21 @@ import java.util.List;
 import static java.lang.Thread.sleep;
 
 @Service
+@Slf4j
 public class RoomTempService implements Runnable{
-    private  int perSecond= GlobalConfig.PER_SECOND_MILLISECOND;
     private  int DEFAULT_ROOM_TEMP=GlobalConfig.ROOM_DEFAULT_TEMP;
     private AcService acService;
+    private UserService userService;
     private ScheduleService scheduleService;
     @Autowired
-    public RoomTempService(AcService acService,ScheduleService scheduleService){
+    public RoomTempService(AcService acService,ScheduleService scheduleService,UserService userService){
         this.scheduleService=scheduleService;
         this.acService=acService;
+        this.userService=userService;
     }
 
     @Override
     public void run() {
-        System.out.println("roomTempService run");
         while(true) {
             List<Ac> allAcState = null;
             try {
@@ -32,6 +36,14 @@ public class RoomTempService implements Runnable{
                 throw new RuntimeException(e);
             }
             for (Ac ac : allAcState) {
+                try {
+                    List<User> userByAcId = userService.getUserByAcId(ac.getAcId());
+                    if (userByAcId.isEmpty())
+                        break;
+                } catch (DataBaseException e) {
+                    log.warn("RoomTempThread:通过acId获取user失败");
+                    break;
+                }
                 float roomTemp = ac.getRoomTemp();
                 int acTemp = ac.getTemp();
                 int windSpeed = ac.getWindSpeed();
@@ -48,8 +60,9 @@ public class RoomTempService implements Runnable{
                             roomTemp=acTemp;
                             try {
                                 scheduleService.closeAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
+                                log.info("roomTempThread:关闭空调"+ac.getAcId());
                             } catch (Exception e) {
-
+                                log.warn("roomTempThread:关闭空调失败"+ac.getAcId());
                             }
                         }
                     }
@@ -59,20 +72,28 @@ public class RoomTempService implements Runnable{
                             roomTemp=acTemp;
                             try {
                                 scheduleService.closeAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
+                                log.info("roomTempThread:关闭空调"+ac.getAcId());
+
                             } catch (Exception e) {
+                                log.warn("roomTempThread:关闭空调失败"+ac.getAcId());
 
                             }
                         }
                     }else{
                         try {
                             scheduleService.closeAc(ac.getAcId(),GlobalConfig.SYSTEM_ID);
+                            log.info("roomTempThread:关闭空调"+ac.getAcId());
+
                         } catch (Exception e) {
+                            log.warn("roomTempThread:关闭空调失败"+ac.getAcId());
 
                         }
                     }
                     try {
                         acService.changeRoomTemp(ac.getAcId(),roomTemp);
+                        log.info("roomTempThread:修改室温"+ac.getAcId());
                     } catch (Exception e) {
+                        log.warn("roomTempThread:修改室温失败"+ac.getAcId());
 
                     }
                 }else {
@@ -83,13 +104,19 @@ public class RoomTempService implements Runnable{
                     }
                     try {
                         acService.changeRoomTemp(ac.getAcId(),roomTemp);
+                        log.info("roomTempThread:修改室温"+ac.getAcId());
+
                     } catch (Exception e) {
+                        log.warn("roomTempThread:修改室温失败"+ac.getAcId());
 
                     }
                     if(Math.abs(ac.getTemp()-roomTemp)>=1){
                         try {
                             scheduleService.openAc(ac.getAcId(),GlobalConfig.AC_DEFAULT_WIND_SPEED,GlobalConfig.SYSTEM_ID);
+                            log.info("roomTempThread:开启空调"+ac.getAcId());
+
                         } catch (Exception e) {
+                            log.warn("roomTempThread:关闭空调失败"+ac.getAcId());
 
                         }
                     }
@@ -98,7 +125,7 @@ public class RoomTempService implements Runnable{
             }
 
             try {
-                sleep(perSecond * 60);
+                sleep(GlobalConfig.PER_SECOND_MILLISECOND * 60);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

@@ -1,5 +1,7 @@
 package top.haidong556.ac.aspect;
 
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -16,6 +18,7 @@ import java.lang.reflect.Method;
 
 @Aspect
 @Component
+@Log4j2
 public class ValidationAspect {
     @Before("execution(* top.haidong556.ac.entity.*.*.set*(..)) && args(newValue)")
     public void validateSetFiledArguments(JoinPoint joinPoint, Object newValue) throws IllegalAccessException {
@@ -87,7 +90,7 @@ public class ValidationAspect {
                     }
                     String msg = ((RangeValidation) anno).msg();
                     if(ValidationUtil.validateRange((int)args[i], min, max)==false){
-                        System.out.println(msg);
+                        log.error(msg);
                         throw new ArgsException(msg);
                     }
                 }

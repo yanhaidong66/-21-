@@ -91,4 +91,13 @@ public class UserRepository {
         }
     }
 
+    public List<User> getUserByAcId(int acId) throws DataBaseException {
+        try(SqlSession session = MysqlFactory.getSession();) {
+            UserMapper mapper = session.getMapper(UserMapper.class);
+            return mapper.getUserByAcId(acId);
+        }catch (Exception e){
+            throw new DataBaseException("获取用户失败",e);
+        }
+
+    }
 }

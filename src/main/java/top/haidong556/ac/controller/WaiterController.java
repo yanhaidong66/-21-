@@ -86,9 +86,9 @@ public class WaiterController {
     public ModelAndView checkout(String username)throws Exception{
         ModelAndView modelAndView=new ModelAndView("waiter-checkout");
         User user = userService.getUser(username);
-        Ac ac=acService.getAcState(user.getAcId());
         List<OperationItem> acDetailTableByUserId = acService.getAcDetailTableByUserId(user.getUserId());
         Waiter waiter = userDetailsService.currentWaiter();
+        acService.closeAc(user.getAcId(), user.getUserId());
         float cost= userService.deleteUser(user.getUserId());
         modelAndView.addObject("cost",cost);
         modelAndView.addObject("waiter",waiter);

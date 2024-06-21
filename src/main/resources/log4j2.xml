@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <!-- 配置属性 -->
+    <Properties>
+        <Property name="log-path">./logs/</Property>
+    </Properties>
+
+    <!-- 配置追加器 -->
+    <Appenders>
+        <!-- 控制台追加器 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+        <!-- 文件追加器 -->
+        <File name="InfoFile" fileName="${log-path}info.log" append="true">
+            <PatternLayout pattern="%d %p %c{1.} [%t] %m%n"/>
+            <!-- 文件滚动策略 -->
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10MB" />
+            </Policies>
+            <!-- 滚动文件策略 -->
+            <DefaultRolloverStrategy max="5"/>
+        </File>
+        <File name="DebugFile" fileName="${log-path}debug.log" append="true">
+            <PatternLayout pattern="%d %p %c{1.} [%t] %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10MB" />
+            </Policies>
+            <!-- 滚动文件策略 -->
+            <DefaultRolloverStrategy max="5"/>
+        </File>
+    </Appenders>
+
+    <!-- 配置日志记录器 -->
+    <Loggers>
+        <!-- 根记录器 -->
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="InfoFile"/>
+        </Root>
+
+<!--        &lt;!&ndash; 自定义记录器 &ndash;&gt;-->
+<!--        <Logger name="top.haidong556.ac" level="debug" additivity="false">-->
+<!--            <AppenderRed ref="DebugFile"/>-->
+<!--        </Logger>-->
+    </Loggers>
+</Configuration>

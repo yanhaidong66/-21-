@@ -29,6 +29,9 @@ public class GlobalConfig {
         AC_MIN_TEMP=Integer.parseInt(property.getProperty("AC_MIN_TEMP","17"));
         AC_MAX_WIND_SPEED=Integer.parseInt(property.getProperty("AC_MAX_WIND_SPEED","3"));
         AC_MIN_WIND_SPEED=Integer.parseInt(property.getProperty("AC_MIN_WIND_SPEED","1"));
+        SCHEDULE_INTERVAL_SECOND=Integer.parseInt(property.getProperty("SCHEDULE_INTERVAL_SECOND","1"));
+
+
     }
     public static final int ROOM_DEFAULT_TEMP;
     public static final int PER_SECOND_MILLISECOND;
@@ -45,4 +48,5 @@ public class GlobalConfig {
     public static final int AC_MIN_TEMP;
     public static final int AC_MIN_WIND_SPEED;
     public static final int AC_MAX_WIND_SPEED;
+    public static final int SCHEDULE_INTERVAL_SECOND;
 }

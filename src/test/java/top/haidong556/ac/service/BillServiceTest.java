@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import top.haidong556.ac.entity.ac.Ac;
 import top.haidong556.ac.entity.bill.BillItem;
+import top.haidong556.ac.entity.operationDetail.OperationItem;
 import top.haidong556.ac.entity.role.User;
 import top.haidong556.ac.util.RandomData;
 
@@ -46,6 +47,12 @@ class BillServiceTest {
 
     @Test
     void getCost() throws Exception {
+        List<OperationItem> acDetailTableByAcId = acService.getAcDetailTableByAcId(108);
+        for (OperationItem o :
+                acDetailTableByAcId) {
+            System.out.println(o);
+        }
+        System.out.println("cost:"+billService.getCost(108));
         acService.openAc(ac.getAcId(),user.getUserId());
         System.out.println("windSpeed:"+acService.getAcState(ac.getAcId()).getWindSpeed());
         sleep(10000);

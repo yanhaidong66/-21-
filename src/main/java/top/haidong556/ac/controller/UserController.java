@@ -34,14 +34,7 @@ public class UserController {
     public ModelAndView getUserPage()throws Exception{
         User user = userDetailsService.currentUser();
         int acId = user.getAcId();
-        Ac acState = acService.getAcState(acId);
-        ModelAndView modelAndView=new ModelAndView("user");
-        float cost = billService.getCost(user.getUserId());
-        modelAndView.addObject("cost",cost);
-        modelAndView.addObject("acState",acState);
-        modelAndView.addObject("user",user);
-        System.out.println(user);
-        return modelAndView;
+        return getModelAndView(user,acId);
     }
     @GetMapping("/temp")
     public ModelAndView changeAcTemp(int newTemp)throws Exception{
@@ -76,8 +69,8 @@ public class UserController {
 
     private ModelAndView getModelAndView(User user, int acId) throws Exception {
         Ac acState = acService.getAcState(acId);
-        ModelAndView modelAndView=new ModelAndView("user");
         float cost = billService.getCost(user.getUserId());
+        ModelAndView modelAndView=new ModelAndView("user");
         modelAndView.addObject("cost",cost);
         modelAndView.addObject("acState",acState);
         modelAndView.addObject("user",user);

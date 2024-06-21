@@ -18,6 +18,12 @@ public interface UserMapper {
     @Delete("DELETE FROM t_user WHERE user_id = #{userId} AND user_role='USER'")
     void deleteUser(int userId);
 
+    @Select("SELECT user_id AS userId, user_ac_id AS acId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user WHERE user_ac_id = #{acId} AND user_role = 'USER'")
+    @Results({
+            @Result(property = "roleType", column = "roleType", javaType = RoleType.class, typeHandler = RoleTypeHandler.class)
+    })
+    List<User> getUserByAcId(int acId);
+
     @Select("SELECT user_id AS userId, user_ac_id AS acId, user_username AS username, user_password AS password, user_role AS roleType FROM t_user WHERE user_id = #{userId} AND user_role = 'USER'")
     @Results({
             @Result(property = "roleType", column = "roleType", javaType = RoleType.class, typeHandler = RoleTypeHandler.class)

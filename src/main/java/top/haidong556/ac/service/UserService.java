@@ -2,6 +2,7 @@ package top.haidong556.ac.service;
 
 import top.haidong556.ac.entity.bill.BillItem;
 import top.haidong556.ac.entity.role.*;
+import top.haidong556.ac.exception.DataBaseException;
 import top.haidong556.ac.repository.BillRepository;
 import top.haidong556.ac.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,14 +46,12 @@ public class UserService {
         userRepository.deleteUser(userId);
         return cost;
     }
-    public People getUser(int userId)throws Exception{
-        return userRepository.getUser(userId);
-    }
-    public User getUser(String username)throws Exception{return userRepository.getUser(username);}
-    public Waiter getWaiter(String username)throws Exception{return userRepository.getWaiter(username);}
-    public Manager getManager(String username)throws Exception{return userRepository.getManager(username);}
-    public Admin getAdmin(String username)throws Exception{return userRepository.getAdmin(username);}
-    public List<User> getAllUser()throws Exception{
+    public User getUser(String username)throws DataBaseException{return userRepository.getUser(username);}
+    public List<User> getUserByAcId(int acId) throws DataBaseException {return userRepository.getUserByAcId(acId);}
+    public Waiter getWaiter(String username) throws DataBaseException {return userRepository.getWaiter(username);}
+    public Manager getManager(String username) throws DataBaseException {return userRepository.getManager(username);}
+    public Admin getAdmin(String username) throws DataBaseException {return userRepository.getAdmin(username);}
+    public List<User> getAllUser() throws DataBaseException {
         return userRepository.getAllUser();
     }
 }
