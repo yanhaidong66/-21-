@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import top.haidong556.ac.entity.ac.Ac;
 import top.haidong556.ac.entity.role.User;
 import top.haidong556.ac.service.AcService;
+import top.haidong556.ac.service.BillService;
+import top.haidong556.ac.service.ScheduleService;
 import top.haidong556.ac.service.UserService;
 import top.haidong556.ac.util.GlobalConfig;
 
@@ -19,12 +21,17 @@ import static java.lang.Thread.sleep;
 @SpringBootTest
 public class MainTest {
     @Autowired
-    public MainTest(AcService acService,UserService userService){
+    public MainTest(AcService acService,UserService userService,BillService billService,ScheduleService scheduleService){
         this.userService=userService;
         this.acService=acService;
+        this.billService=billService;
+        this.scheduleService=scheduleService;
     }
     private AcService acService;
     private UserService userService;
+    private ScheduleService scheduleService;
+
+    private BillService billService;
     List<Ac> acs=new LinkedList<>();
     List<User> users=new LinkedList<>();
     //房间初始温度
@@ -58,6 +65,16 @@ public class MainTest {
         userService.createUser(user);
         users.add(user);
     }
+    public  void  outputAllACStatus() throws Exception {
+
+        for (int i=0;i<5;i++) {
+            int acId = acs.get(i).getAcId();
+            Ac acState = acService.getAcState(acId);
+            acs.set(i,acState);
+            System.out.println(acState);
+        }
+        System.out.println("--------------------------------------------------------");
+    }
     @AfterEach
     public void afterClearData() throws Exception {
         for (User user :
@@ -76,12 +93,138 @@ public class MainTest {
         int perSecondMillisecond = GlobalConfig.PER_SECOND_MILLISECOND;
         int perMinuteMillisecond = perSecondMillisecond*60;
         try{
-            Ac acState = acService.getAcState(acs.get(0).getAcId());
-            System.out.println(acState);
-            acService.changeAcTemp(acState.getAcId(),38,GlobalConfig.SYSTEM_ID);
-            Ac acState1 = acService.getAcState(acState.getAcId());
-            System.out.println(acState1);
-            acService.changeAcTemp(acState.getAcId(),acState.getTemp(),GlobalConfig.SYSTEM_ID);
+//            Ac acState = acService.getAcState(acs.get(0).getAcId());
+//            System.out.println(acState);
+//            acService.changeAcTemp(acState.getAcId(),38,GlobalConfig.SYSTEM_ID);
+//            Ac acState1 = acService.getAcState(acState.getAcId());
+//            System.out.println(acState1);
+//            acService.changeAcTemp(acState.getAcId(),acState.getTemp(),GlobalConfig.SYSTEM_ID);
+
+            System.out.println(users);
+            System.out.println("----------");
+            scheduleService.openAc(acs.get(0).getAcId(),acs.get(0).getWindSpeed(),users.get(0).getUserId());
+            sleep(perMinuteMillisecond*1);//1
+            outputAllACStatus();
+            acService.changeAcTemp(acs.get(1).getAcId(),18,users.get(1).getUserId());
+            scheduleService.openAc(acs.get(1).getAcId(),acs.get(1).getWindSpeed(),users.get(1).getUserId());
+            scheduleService.openAc(acs.get(4).getAcId(),acs.get(4).getWindSpeed(),users.get(4).getUserId());
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+
+            scheduleService.openAc(acs.get(2).getAcId(),acs.get(2).getWindSpeed(),users.get(2).getUserId());
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+
+            acService.changeAcTemp(acs.get(1).getAcId(),19,users.get(1).getUserId());
+            scheduleService.openAc(acs.get(3).getAcId(),acs.get(3).getWindSpeed(),users.get(3).getUserId());
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+
+            acService.changeAcTemp(acs.get(4).getAcId(),22,users.get(4).getUserId());
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+
+            scheduleService.changeAcWindSpeed(acs.get(0).getAcId(), 3,users.get(0).getUserId());
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+
+            scheduleService.closeAc(acs.get(2).getAcId(),users.get(2).getUserId());
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+
+            scheduleService.openAc(acs.get(1).getAcId(),acs.get(1).getWindSpeed(),users.get(1).getUserId());
+            scheduleService.changeAcWindSpeed(acs.get(4).getAcId(),3,users.get(4).getUserId());
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+
+            acService.changeAcTemp(acs.get(0).getAcId(),22,users.get(0).getUserId());
+            acService.changeAcTemp(acs.get(3).getAcId(),18,users.get(3).getUserId());
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+
+
+
+
+
+
+
+            acService.changeAcTemp(acs.get(1).getAcId(),22,users.get(1).getUserId());
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+            scheduleService.changeAcWindSpeed(acs.get(4).getAcId(), 1,users.get(4).getUserId());
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+            scheduleService.closeAc(acs.get(0).getAcId(),users.get(0).getUserId());
+            acService.changeAcTemp(acs.get(2).getAcId(),24,users.get(2).getUserId());
+            scheduleService.changeAcWindSpeed(acs.get(2).getAcId(), 1,users.get(2).getUserId());
+
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+            acService.changeAcTemp(acs.get(4).getAcId(),20,users.get(4).getUserId());
+            scheduleService.changeAcWindSpeed(acs.get(4).getAcId(), 3,users.get(4).getUserId());
+
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+
+
+
+
+
+
+
+
+
+
+            scheduleService.closeAc(acs.get(1).getAcId(),users.get(1).getUserId());
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+
+            scheduleService.changeAcWindSpeed(acs.get(2).getAcId(), 3,users.get(2).getUserId());
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+
+            scheduleService.openAc(acs.get(0).getAcId(),acs.get(0).getWindSpeed(),users.get(0).getUserId());
+            acService.changeAcTemp(acs.get(3).getAcId(),20,users.get(3).getUserId());
+            scheduleService.changeAcWindSpeed(acs.get(3).getAcId(), 2,users.get(3).getUserId());
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+
+            scheduleService.openAc(acs.get(1).getAcId(),acs.get(1).getWindSpeed(),users.get(1).getUserId());
+            sleep(perMinuteMillisecond*1);//1
+            outputAllACStatus();
+
+            acService.changeAcTemp(acs.get(4).getAcId(),25,users.get(4).getUserId());
+            sleep(perMinuteMillisecond*1);
+            outputAllACStatus();
+
+
+
+
+
+
+            sleep(perMinuteMillisecond*1);//1
+            scheduleService.closeAc(acs.get(2).getAcId(),users.get(2).getUserId());
+            sleep(perMinuteMillisecond*1);
+            scheduleService.closeAc(acs.get(4).getAcId(),users.get(4).getUserId());
+            sleep(perMinuteMillisecond*1);
+            scheduleService.closeAc(acs.get(0).getAcId(),users.get(0).getUserId());
+            sleep(perMinuteMillisecond*1);
+            scheduleService.closeAc(acs.get(1).getAcId(),users.get(1).getUserId());
+            scheduleService.closeAc(acs.get(3).getAcId(),users.get(3).getUserId());
+            sleep(perMinuteMillisecond*1);
+
+
+
+
+
 
 //        房间1	房间3	房间3	房间4	房间5
 //

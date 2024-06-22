@@ -13,7 +13,7 @@
         </Console>
 
         <!-- 文件追加器 -->
-        <File name="InfoFile" fileName="${log-path}info.log" append="true">
+        <File name="InfoFile" fileName="${log-path}info/info.log" append="true">
             <PatternLayout pattern="%d %p %c{1.} [%t] %m%n"/>
             <!-- 文件滚动策略 -->
             <Policies>
@@ -23,7 +23,17 @@
             <!-- 滚动文件策略 -->
             <DefaultRolloverStrategy max="5"/>
         </File>
-        <File name="DebugFile" fileName="${log-path}debug.log" append="true">
+        <File name="WarnFile" fileName="${log-path}warn/warn.log" append="true">
+            <PatternLayout pattern="%d %p %c{1.} [%t] %m%n"/>
+            <!-- 文件滚动策略 -->
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10MB" />
+            </Policies>
+            <!-- 滚动文件策略 -->
+            <DefaultRolloverStrategy max="5"/>
+        </File>
+        <File name="DebugFile" fileName="${log-path}debug/debug.log" append="true">
             <PatternLayout pattern="%d %p %c{1.} [%t] %m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy />
@@ -38,13 +48,16 @@
     <Loggers>
         <!-- 根记录器 -->
         <Root level="info">
-            <AppenderRef ref="Console"/>
             <AppenderRef ref="InfoFile"/>
         </Root>
 
-<!--        &lt;!&ndash; 自定义记录器 &ndash;&gt;-->
-<!--        <Logger name="top.haidong556.ac" level="debug" additivity="false">-->
-<!--            <AppenderRed ref="DebugFile"/>-->
-<!--        </Logger>-->
+        <!-- 自定义记录器 -->
+        <Logger name="debugLog" level="debug" additivity="false">
+            <AppenderRed ref="DebugFile"/>
+        </Logger>
+        <logger name="warnLog" level="warn" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRed ref="WarnFile"/>
+        </logger>
     </Loggers>
 </Configuration>

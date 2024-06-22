@@ -22,7 +22,6 @@ public class GlobalConfig {
         WAITER_ID = Integer.parseInt(property.getProperty("WAITER_ID","2"));
         MANAGER_ID = Integer.parseInt(property.getProperty("MANAGER_ID","4"));
         SYSTEM_ID = Integer.parseInt(property.getProperty("SYSTEM_ID","1"));
-        AC_COST_PER_SECOND = Float.parseFloat(property.getProperty("AC_COST_PER_SECOND","0.1"));
         INIT_AC = Boolean.parseBoolean(property.getProperty("INIT_AC","false"));
         SHOW_REPOSITORY_OPERATION_MESSAGE = Boolean.parseBoolean(property.getProperty("SHOW_REPOSITORY_OPERATION_MESSAGE","false"));
         AC_MAX_TEMP=Integer.parseInt(property.getProperty("AC_MAX_TEMP","26"));
@@ -30,6 +29,10 @@ public class GlobalConfig {
         AC_MAX_WIND_SPEED=Integer.parseInt(property.getProperty("AC_MAX_WIND_SPEED","3"));
         AC_MIN_WIND_SPEED=Integer.parseInt(property.getProperty("AC_MIN_WIND_SPEED","1"));
         SCHEDULE_INTERVAL_SECOND=Integer.parseInt(property.getProperty("SCHEDULE_INTERVAL_SECOND","1"));
+        ROOM_TEMP_CHANGE_RATE=Float.parseFloat(property.getProperty("ROOM_TEMP_CHANGE_RATE","0.5"));
+        AC_COST_MID_PER_SECOND=Float.parseFloat(property.getProperty("AC_COST_MID_PER_SECOND","1"));
+        AC_COST_HIGH_PER_SECOND=Float.parseFloat(property.getProperty("AC_COST_HIGH_PER_SECOND","2"));
+        AC_COST_LOW_PER_SECOND=Float.parseFloat(property.getProperty("AC_COST_LOW_PER_SECOND","0.5"));
 
 
     }
@@ -41,7 +44,6 @@ public class GlobalConfig {
     public static final int WAITER_ID;
     public static final int MANAGER_ID;
     public static final int SYSTEM_ID;
-    public static final float AC_COST_PER_SECOND;
     public static final boolean INIT_AC;
     public static final boolean SHOW_REPOSITORY_OPERATION_MESSAGE;
     public static final int  AC_MAX_TEMP;
@@ -49,4 +51,8 @@ public class GlobalConfig {
     public static final int AC_MIN_WIND_SPEED;
     public static final int AC_MAX_WIND_SPEED;
     public static final int SCHEDULE_INTERVAL_SECOND;
+    public static final float ROOM_TEMP_CHANGE_RATE;
+    public static final float AC_COST_MID_PER_SECOND;
+    public static final float AC_COST_HIGH_PER_SECOND;
+    public static final float AC_COST_LOW_PER_SECOND;
 }

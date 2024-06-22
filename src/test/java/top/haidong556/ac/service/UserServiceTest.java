@@ -20,7 +20,7 @@ class UserServiceTest {
 
     @Test
     void getUserByAcId() throws DataBaseException {
-        List<User> userByAcId = userService.getUserByAcId(1);
+        List<User> userByAcId = userService.getUserByAcId(15);
         System.out.println(userByAcId);
     }
 }

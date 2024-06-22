@@ -80,7 +80,7 @@ class BillServiceTest {
         billService.createBillItem(billItem1);
         acService.openAc(ac.getAcId(),user.getUserId());
         sleep(1000);
-        acService.changeAcWindSpeed(ac.getAcId(),4,user.getUserId());
+        acService.changeAcWindSpeed(ac.getAcId(),2,user.getUserId());
         sleep(1000);
 
 

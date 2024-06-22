@@ -46,7 +46,7 @@ public class BillService {
         float intervalSecond=0;
         LocalDateTime openTime=null;
         LocalDateTime closeTime=null;
-        float speedRate=1;
+        float speedPreSecond=1;
         Ac.AcState acState= Ac.AcState.CLOSE;
         List<OperationItem> acOperationTableByUserId = acOperationRepository.getAcOperationTableByUserId(userId);
         for(OperationItem operationItem:acOperationTableByUserId){
@@ -55,13 +55,13 @@ public class BillService {
                     openTime=operationItem.getCreateTime();
                     acState= Ac.AcState.OPEN;
                     if(operationItem.getAcWindSpeed()==1){
-                        speedRate=0.8f;
+                        speedPreSecond=GlobalConfig.AC_COST_LOW_PER_SECOND;
                     }
                     else if(operationItem.getAcWindSpeed()==2){
-                        speedRate=1;
+                        speedPreSecond=GlobalConfig.AC_COST_MID_PER_SECOND;
                     }
                     else if(operationItem.getAcWindSpeed()==3){
-                        speedRate=1.2f;
+                        speedPreSecond=GlobalConfig.AC_COST_HIGH_PER_SECOND;
                     }
                 }break;
                 case CLOSE_AC:{
@@ -69,7 +69,7 @@ public class BillService {
                     if(acState== Ac.AcState.OPEN){
                         intervalMill= Duration.between(openTime.toInstant(ZoneOffset.UTC),closeTime.toInstant(ZoneOffset.UTC)).toMillis();
                         intervalSecond=intervalMill/GlobalConfig.PER_SECOND_MILLISECOND;
-                        cost+=speedRate* GlobalConfig.AC_COST_PER_SECOND* intervalSecond;
+                        cost+=speedPreSecond* intervalSecond;
                     }
                     acState= Ac.AcState.CLOSE;
                     openTime=null;
@@ -84,16 +84,16 @@ public class BillService {
                         break;
                     intervalMill= Duration.between(openTime.toInstant(ZoneOffset.UTC),operationItem.getCreateTime().toInstant(ZoneOffset.UTC)).toMillis();
                     intervalSecond=intervalMill/GlobalConfig.PER_SECOND_MILLISECOND;
-                    cost+=speedRate* GlobalConfig.AC_COST_PER_SECOND* intervalSecond;
+                    cost+=speedPreSecond* intervalSecond;
                     openTime=operationItem.getCreateTime();
                     if(operationItem.getAcWindSpeed()==1){
-                        speedRate=0.8f;
+                        speedPreSecond=GlobalConfig.AC_COST_LOW_PER_SECOND;
                     }
                     else if(operationItem.getAcWindSpeed()==2){
-                        speedRate=1;
+                        speedPreSecond=GlobalConfig.AC_COST_MID_PER_SECOND;
                     }
                     else if(operationItem.getAcWindSpeed()==3){
-                        speedRate=1.2f;
+                        speedPreSecond=GlobalConfig.AC_COST_HIGH_PER_SECOND;
                     }
                 }break;
             }
@@ -101,7 +101,7 @@ public class BillService {
         if(acState!= Ac.AcState.CLOSE){
             intervalMill= Duration.between(openTime.toInstant(ZoneOffset.UTC),LocalDateTime.now().toInstant(ZoneOffset.UTC)).toMillis();
             intervalSecond = intervalMill/GlobalConfig.PER_SECOND_MILLISECOND;
-            cost+=speedRate* GlobalConfig.AC_COST_PER_SECOND* intervalSecond;
+            cost+=speedPreSecond* intervalSecond;
         }
 
         return cost;
