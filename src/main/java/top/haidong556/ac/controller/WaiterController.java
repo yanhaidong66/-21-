@@ -90,6 +90,7 @@ public class WaiterController {
         Waiter waiter = userDetailsService.currentWaiter();
         acService.closeAc(user.getAcId(), user.getUserId());
         float cost= userService.deleteUser(user.getUserId());
+        acService.deleteAc()
         modelAndView.addObject("cost",cost);
         modelAndView.addObject("waiter",waiter);
         modelAndView.addObject("opDetails",acDetailTableByUserId);
